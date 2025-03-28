@@ -19,12 +19,12 @@ const Home = () => {
 
       {/* Heading */}
       <div className="text-center mt-6">
-        <h3 className="text-lg font-bold">All the skills related to Web Development....</h3>
+        <h3 className="text-lg font-bold">ALL COURSES</h3>
       </div>
 
       {/* Filter Buttons */}
       <div className="flex justify-center space-x-4 my-6">
-        {["HTML", "CSS", "JAVASCRIPT", "React"].map((tech, index) => (
+        {["HTML", "CSS", "JAVASCRIPT", "React","NUMPY", "PYTHON", "PYTORCH", "REACT-NATIVE","FLUTTER", "SWIFT", "SQL", "EXCEL"].map((tech, index) => (
           <button key={index} className="px-4 py-2 bg-blue-500 text-white rounded-lg">
             {tech}
           </button>
@@ -34,7 +34,7 @@ const Home = () => {
       {/* Course Cards Section */}
       <div className="flex justify-center flex-wrap gap-7 px-10">
         {courses.map((course, index) => (
-          <div key={index} className="w-60 p-4 bg-white shadow-lg rounded-lg text-center">
+          <div key={index} className="w-60 p-4 bg-blue-200 shadow-lg rounded-lg text-center">
             <img src={course.image} alt={course.title} className="w-full h-32 rounded-lg" />
             <h4 className="mt-2 font-semibold">{course.title}</h4>
             <p className="text-sm text-gray-600">{course.instructor}</p>
@@ -75,9 +75,24 @@ const courses = [
   { image: "src/assets/img1.jpg", title: "HTML Complete Basic Level 1", instructor: "Prof. Nikunj Vadher" },
   { image: "src/assets/img2.png", title: "HTML Complete Average Level", instructor: "Prof. Nikunj Vadher" },
   { image: "src/assets/img3.png", title: "Complete CSS: Beginner to Advanced", instructor: "Prof. Nikunj Vadher" },
-  { image: "src/assets/img4.png", title: "Complete JavaScript", instructor: "Prof. Nikunj Vadher" },
-  { image: "src/assets/img5.png", title: "Complete React", instructor: "Prof. Nikunj Vadher" },
-
+  { image: "src/assets/img4.png", title: "Complete JavaScript from Scratch", instructor: "Prof. Nikunj Vadher" },
+  { image: "src/assets/img5.png", title: "Complete React from Scratch ", instructor: "Prof. Nikunj Vadher" },
+  { image: "src/assets/img7.png", title: "Introduction to Mobile App Development & more", instructor: "Prof. Pervez Belim " },
+  { image: "src/assets/img8.png", title: "Introduction to Mobile App Development & more", instructor: "Prof. Pervez Belim" },
+  { image: "src/assets/img9.png", title: "Introduction to Mobile App Development & more", instructor: "Prof. Pervez Belim" },
+  { image: "src/assets/img10.png", title: "Introduction to Mobile App Development & more", instructor: "Prof. Pervez Belim" },
+  { image: "src/assets/img11.png", title: "Introduction to Mobile App Development & more", instructor: "Prof. Pervez Belim" },
+  { image: "src/assets/img19.png", title: "Introduction to Data Science", instructor: "Prof. Snehal Sathwara " },
+  { image: "src/assets/img20.jpg", title: "Introduction to Data Science", instructor: "Prof. Chhaya Patel" },
+  { image: "src/assets/img21.png", title: "Introduction to Data Science", instructor: "Prof. Chetan Shingadiya" },
+  { image: "src/assets/img13.png", title: "Introduction to Data Science", instructor: "Prof. Chhaya Patel" },
+  { image: "src/assets/img23.png", title: "Introduction to Data Science", instructor: "Prof. Pervez Belim" },
+  { image: "src/assets/img13.png", title: "Introduction to Python", instructor: "Prof. Snehal Sathwara " },
+  { image: "src/assets/img18.png", title: "Introduction to Python", instructor: "Prof. Chhaya Patel" },
+  { image: "src/assets/img15.png", title: "Introduction to Python", instructor: "Prof. Chetan Shingadiya" },
+  { image: "src/assets/img16.png", title: "Introduction to Python", instructor: "Prof. Chhaya Patel" },
+  { image: "src/assets/img17.png", title: "Introduction to Python", instructor: "Prof. Pervez Belim" },
+  
 ];
 
 // Learner Images
@@ -88,4 +103,3 @@ const learners = [
   { image: "src/assets/L_img4.jpg" },
   { image: "src/assets/L_img5.webp" },
 ];
-  

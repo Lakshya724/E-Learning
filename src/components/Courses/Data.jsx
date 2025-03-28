@@ -10,7 +10,7 @@ const Home = () => {
 
       {/* Hero Section */}
       <div className="relative w-full h-80 bg-cover bg-center" 
-           style={{ backgroundImage: "url('src/assets/img1.jpg')" }}>
+           style={{ backgroundImage: "url('src/assets/Data.png')" }}>
         <div className="absolute inset-0 bg-black opacity-30"></div>
         <div className="absolute inset-0 flex flex-col justify-center items-center text-white">
           <h2 className="text-xl font-semibold">India's Most Loved Coding Community ❤️</h2>
@@ -19,12 +19,12 @@ const Home = () => {
 
       {/* Heading */}
       <div className="text-center mt-6">
-        <h3 className="text-lg font-bold">All the skills related to Web Development....</h3>
+        <h3 className="text-lg font-bold">All the skills related to Data Science...</h3>
       </div>
 
       {/* Filter Buttons */}
       <div className="flex justify-center space-x-4 my-6">
-        {["HTML", "CSS", "JAVASCRIPT", "React"].map((tech, index) => (
+        {["EXCEL", "POWER BI", "DATA SCIENCE", "SQL"].map((tech, index) => (
           <button key={index} className="px-4 py-2 bg-blue-500 text-white rounded-lg">
             {tech}
           </button>
@@ -46,9 +46,9 @@ const Home = () => {
       </div>
 
       {/* Learners Section */}
-      <div className="bg-[#fdfce8] py-8 text-center mt-20">
+      <div className="bg-[#fdfce8] py-8 text-center mt-10">
         <h3 className="text-lg font-semibold text-black">Some of our Learners</h3>
-        <div className="flex justify-center mt-5 space-x-10">
+        <div className="flex justify-center mt-4 space-x-6">
           {learners.map((learner, index) => (
             <img key={index} src={learner.image} alt={`Learner ${index + 1}`} 
                  className="w-24 h-24 rounded-full border-4 border-white shadow-md object-cover" />
@@ -57,10 +57,9 @@ const Home = () => {
       </div>
 
       {/* Full-width text section */}
-      <div className="bg-[#7a739d] text-white text-center py-4 mt-0 mb-[5px]">
+      <div className="bg-[#7a739d] text-white text-center py-4 mt-0">
         <p className="text-lg font-medium">Our learners can access content from anywhere in the world.</p>
       </div>
-
 
       {/* Footer */}
       <Footer />
@@ -72,11 +71,11 @@ export default Home;
 
 // Sample Data for Courses
 const courses = [
-  { image: "src/assets/img1.jpg", title: "HTML Complete Basic Level 1", instructor: "Prof. Nikunj Vadher" },
-  { image: "src/assets/img2.png", title: "HTML Complete Average Level", instructor: "Prof. Nikunj Vadher" },
-  { image: "src/assets/img3.png", title: "Complete CSS: Beginner to Advanced", instructor: "Prof. Nikunj Vadher" },
-  { image: "src/assets/img4.png", title: "Complete JavaScript", instructor: "Prof. Nikunj Vadher" },
-  { image: "src/assets/img5.png", title: "Complete React", instructor: "Prof. Nikunj Vadher" },
+  { image: "src/assets/img19.png", title: "Introduction to Data Science", instructor: "Prof. Snehal Sathwara " },
+  { image: "src/assets/img20.jpg", title: "Introduction to Data Science", instructor: "Prof. Chhaya Patel" },
+  { image: "src/assets/img21.png", title: "Introduction to Data Science", instructor: "Prof. Chetan Shingadiya" },
+  { image: "src/assets/img13.png", title: "Introduction to Data Science", instructor: "Prof. Chhaya Patel" },
+  { image: "src/assets/img23.png", title: "Introduction to Data Science", instructor: "Prof. Pervez Belim" },
 
 ];
 
@@ -88,4 +87,3 @@ const learners = [
   { image: "src/assets/L_img4.jpg" },
   { image: "src/assets/L_img5.webp" },
 ];
-  
