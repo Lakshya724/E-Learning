@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate(); // ✅ React Router Navigation
 
   return (
     <>
@@ -77,17 +79,31 @@ const Login = () => {
 
             {/* Forgot Password */}
             <div className="text-right text-gray-600 text-sm mb-4">
-              <a href="#" className="hover:underline">Forgot Password?</a>
+              <button 
+                className="hover:underline"
+                onClick={() => navigate("/Forget")} // ✅ Use navigate for smooth routing
+              >
+                Forgot Password?
+              </button>
             </div>
 
             {/* Sign In Button */}
-            <button className="w-full bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-600">
+            <button
+              className="w-full bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-600"
+              onClick={() => navigate("/dashboard")} // ✅ Redirect after login
+            >
               Sign In
             </button>
 
             {/* Sign Up Link */}
             <p className="text-center text-gray-600 text-sm mt-4">
-              Don’t have an account? <a href="#" className="text-yellow-500 hover:underline">Sign Up</a>
+              Don’t have an account?{" "}
+              <button
+                className="text-yellow-500 hover:underline"
+                onClick={() => navigate("/Register")} // ✅ Use navigate for Sign Up
+              >
+                Sign Up
+              </button>
             </p>
           </div>
 

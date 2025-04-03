@@ -1,8 +1,9 @@
+// eslint-disable-next-line no-unused-vars
 import React from "react";
 import Navbar from "../Navbar/Navbar"; // Import Navbar
 import Footer from "../Footer/Footer"; // Import Footer
 
-const Home = () => {
+const Data = () => {
   return (
     <div className="bg-gray-100">
       {/* Navbar */}
@@ -67,7 +68,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Data;
 
 // Sample Data for Courses
 const courses = [

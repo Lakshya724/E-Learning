@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
+  const navigate = useNavigate(); // ✅ React Router Navigation
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -40,13 +42,19 @@ const ForgetPassword = () => {
               type="submit"
               className="w-full bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-600"
             >
-              Send Reset link
+              Send Reset Link
             </button>
           </form>
 
           {/* Back to Login */}
           <p className="text-center text-gray-600 text-sm mt-4">
-            Back to <a href="#" className="text-yellow-500 hover:underline">Login</a>
+            Back to{" "}
+            <button 
+              className="text-yellow-500 hover:underline"
+              onClick={() => navigate("/login")} // ✅ Navigate to Login without refresh
+            >
+              Login
+            </button>
           </p>
         </div>
 

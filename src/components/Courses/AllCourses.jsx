@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "../Navbar/Navbar"; // Import Navbar
 import Footer from "../Footer/Footer"; // Import Footer
 
-const Home = () => {
+const AllCourses = () => {
   return (
     <div className="bg-gray-100">
       {/* Navbar */}
@@ -68,7 +68,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default AllCourses;
 
 // Sample Data for Courses
 const courses = [

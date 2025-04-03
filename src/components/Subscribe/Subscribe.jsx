@@ -1,5 +1,6 @@
 import React from "react";
 import { FaBell } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import BgImage from "../../assets/bg.png";
 import { motion } from "framer-motion";
 
@@ -11,6 +12,8 @@ const bgStyle = {
 };
 
 const Subscribe = () => {
+  const navigate = useNavigate(); // Initialize navigate function
+
   return (
     <section className="bg-[#f7f7f7]">
       <motion.div
@@ -33,13 +36,14 @@ const Subscribe = () => {
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
               Recusandae iusto minima
             </p>
-            <a
-              href=""
+            {/* Use button with useNavigate for navigation */}
+            <button
+              onClick={() => navigate("/subscribe")}
               className="primary-btn !mt-8 inline-flex items-center gap-4 group"
             >
               Subscribe Now
               <FaBell className="group-hover:animate-bounce group-hover:text-lg duration-200" />
-            </a>
+            </button>
           </div>
         </motion.div>
       </motion.div>

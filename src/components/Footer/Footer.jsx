@@ -1,9 +1,12 @@
-import React from "react";
+import React from "react"; 
 import { FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
 import { TbWorldWww } from "react-icons/tb";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const navigate = useNavigate();
+
   return (
     <footer className="py-28 bg-[#f7f7f7]">
       <motion.div
@@ -12,7 +15,7 @@ const Footer = () => {
         className="container"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-14 md:gap-4">
-          {/* first section */}
+          {/* First section */}
           <div className="space-y-4 max-w-[300px]">
             <h1 className="text-2xl font-bold">Skill_Elevate</h1>
             <p className="text-dark2">
@@ -22,25 +25,41 @@ const Footer = () => {
               master coding skills, build projects, and launch your tech career.
             </p>
           </div>
-          {/* second section */}
+
+          {/* Second section */}
           <div className="grid grid-cols-2 gap-10">
             <div className="space-y-4">
               <h1 className="text-2xl font-bold">Courses</h1>
               <div className="text-dark2">
                 <ul className="space-y-2 text-lg">
-                <li className="cursor-pointer hover:text-secondary duration-200">
+                  <li 
+                    className="cursor-pointer hover:text-secondary duration-200"
+                    onClick={() => navigate("/courses")}
+                  >
                     All Courses
                   </li>
-                  <li className="cursor-pointer hover:text-secondary duration-200">
+                  <li 
+                    className="cursor-pointer hover:text-secondary duration-200"
+                    onClick={() => navigate("/WebDev")}
+                  >
                     Web Development
                   </li>
-                  <li className="cursor-pointer hover:text-secondary duration-200">
+                  <li 
+                    className="cursor-pointer hover:text-secondary duration-200"
+                    onClick={() => navigate("/mobile")}
+                  >
                     Mobile Development
                   </li>
-                  <li className="cursor-pointer hover:text-secondary duration-200">
+                  <li 
+                    className="cursor-pointer hover:text-secondary duration-200"
+                    onClick={() => navigate("/data")}
+                  >
                     Data Science
                   </li>
-                  <li className="cursor-pointer hover:text-secondary duration-200">
+                  <li 
+                    className="cursor-pointer hover:text-secondary duration-200"
+                    onClick={() => navigate("/ai-ml")}
+                  >
                     AI/ML
                   </li>
                 </ul>
@@ -50,23 +69,36 @@ const Footer = () => {
               <h1 className="text-2xl font-bold">Links</h1>
               <div className="text-dark2">
                 <ul className="space-y-2 text-lg">
-                  <li className="cursor-pointer hover:text-secondary duration-200">
+                  <li 
+                    className="cursor-pointer hover:text-secondary duration-200"
+                    onClick={() => navigate("/")}
+                  >
                     Home
                   </li>
-                  <li className="cursor-pointer hover:text-secondary duration-200">
-                    Cources
+                  <li 
+                    className="cursor-pointer hover:text-secondary duration-200"
+                    onClick={() => navigate("/courses")}
+                  >
+                    Courses
                   </li>
-                  <li className="cursor-pointer hover:text-secondary duration-200">
+                  <li 
+                    className="cursor-pointer hover:text-secondary duration-200"
+                    onClick={() => navigate("/about")}
+                  >
                     About
                   </li>
-                  <li className="cursor-pointer hover:text-secondary duration-200">
+                  <li 
+                    className="cursor-pointer hover:text-secondary duration-200"
+                    onClick={() => navigate("/contact")}
+                  >
                     Contact
                   </li>
                 </ul>
               </div>
             </div>
           </div>
-          {/* third section */}
+
+          {/* Third section */}
           <div className="space-y-4 max-w-[300px]">
             <h1 className="text-2xl font-bold">Get In Touch</h1>
             <div className="flex items-center">
@@ -79,21 +111,7 @@ const Footer = () => {
                 Go
               </button>
             </div>
-            {/* social icons */}
-            <div className="flex space-x-6 py-3">
-              <a href="https://chat.whatsapp.com/FQSKgJ5f1eIAhlyF5sVym0">
-                <FaWhatsapp className="cursor-pointer hover:text-primary hover:scale-105 duration-200" />
-              </a>
-              <a href="https://www.instagram.com/the.coding.journey/">
-                <FaInstagram className="cursor-pointer hover:text-primary hover:scale-105 duration-200" />
-              </a>
-              <a href="https://thecodingjourney.com/">
-                <TbWorldWww className="cursor-pointer hover:text-primary hover:scale-105 duration-200" />
-              </a>
-              <a href="https://www.youtube.com/@TheCodingJourney">
-                <FaYoutube className="cursor-pointer hover:text-primary hover:scale-105 duration-200" />
-              </a>
-            </div>
+           
           </div>
         </div>
       </motion.div>
