@@ -4,14 +4,17 @@ build/** linguist-vendored
 dist/** linguist-vendored
 out/** linguist-vendored
 
-# Treat .jst files as JavaScript
+# Force .jst files to be treated as JavaScript
 *.jst linguist-language=JavaScript
 
-# Explicitly treat .jsx, .js, .ts, and .tsx as JavaScript
-*.jsx linguist-language=JavaScript
+# Explicit language overrides
 *.js linguist-language=JavaScript
+*.jsx linguist-language=JavaScript
 *.ts linguist-language=JavaScript
 *.tsx linguist-language=JavaScript
 
-# Ignore test snapshots if any
+# Ignore snapshots if present
 __snapshots__/** linguist-vendored
+
+# Ignore ajv's dot templates specifically (extra safe)
+node_modules/ajv/lib/dot/** linguist-vendored
