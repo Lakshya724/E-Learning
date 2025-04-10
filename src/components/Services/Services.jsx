@@ -1,8 +1,6 @@
-import React from "react";
 import { RiComputerLine } from "react-icons/ri";
 import { CiMobile3 } from "react-icons/ci";
 import { TbWorldWww } from "react-icons/tb";
-import { IoMdHappy } from "react-icons/io";
 import { BiSupport } from "react-icons/bi";
 import { IoBookSharp } from "react-icons/io5";
 import { MdAnalytics } from "react-icons/md";
@@ -15,7 +13,7 @@ const ServicesData = [
   { id: 3, title: "Mobile Development", path: "/mobile", icon: <CiMobile3 />, delay: 0.3 },
   { id: 4, title: "AI/ML", path: "/ai-ml", icon: <RiComputerLine />, delay: 0.4 },
   { id: 5, title: "Data Science", path: "/data", icon: <MdAnalytics />, delay: 0.5 },
-  { id: 6, title: "24/7 Support", path: "/support", icon: <BiSupport />, delay: 0.7 },
+  { id: 6, title: "24/7 Support", path: "/contact", icon: <BiSupport />, delay: 0.7 },
 ];
 
 const SlideLeft = (delay) => ({

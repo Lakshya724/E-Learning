@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 const ChangePassword = () => {
@@ -75,14 +75,14 @@ const ChangePassword = () => {
             Change Password
           </button>
 
-          {/* Sign Up Link */}
+
         <p className="text-center text-gray-600 text-sm mt-4">
-              Back to <a href="#" className="text-yellow-500 hover:underline">Login</a>
+              Back to <a href="/login" className="text-yellow-500 hover:underline">Login</a>
             </p>
         
         </div>
 
-        {/* Right Side - Image with Less Blur */}
+      
         <div className="hidden md:flex w-1/2 items-center justify-center relative">
           <img
             src="src/assets/Adminfront.jpg"

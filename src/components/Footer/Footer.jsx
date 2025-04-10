@@ -1,8 +1,5 @@
-import React from "react"; 
-import { FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
-import { TbWorldWww } from "react-icons/tb";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -17,7 +14,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-14 md:gap-4">
           {/* First section */}
           <div className="space-y-4 max-w-[300px]">
-            <h1 className="text-2xl font-bold">Skill_Elevate</h1>
+          <Link to="/" className="text-2xl font-bold hover:text-secondary transition duration-300">
+          Skill_Elevate
+        </Link>
             <p className="text-dark2">
               Skill_Elevate is a platform dedicated to empowering aspiring developers.
               From beginner tutorials to advanced programming concepts, we

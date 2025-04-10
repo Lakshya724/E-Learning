@@ -1,89 +1,88 @@
-import Sidebar_D from "../Admin/Sidebar_D"; // Import Sidebar
-
-const courses = [
-  {
-    title: "Introduction to Mobile App Development",
-    skills: "Mobile Development, Android Studio, Flutter...",
-    image: "src/assets/img8.png",
-  },
-  {
-    title: "Introduction to Mobile App Development",
-    skills: "Android Studio, Application Development...",
-    image: "src/assets/img11.png",
-  },
-  {
-    title: "Introduction to SQL",
-    skills: "SQL Queries, Database Management...",
-    image: "src/assets/img24.png",
-  },
-  {
-    title: "Introduction to ChatGPT",
-    skills: "AI, Chatbots, NLP...",
-    image: "src/assets/img17.png",
-  },
-  {
-    title: "Introduction to Excel",
-    skills: "Data Analysis, Excel Formulas, Excel Sheets...",
-    image: "src/assets/img19.png",
-  },
-  {
-    title: "Introduction to Mobile App Development",
-    skills: "React Native, Mobile Development...",
-    image: "src/assets/img6.png",
-  },
-  {
-    title: "Introduction to JavaScript",
-    skills: "JavaScript, Web Development...",
-    image: "src/assets/img5.png",
-  },
-  {
-    title: "Introduction to Power BI",
-    skills: "Data Analysis, Business Intelligence...",
-    image: "src/assets/img20.jpg",
-  },
-];
+import Sidebar_D from "../Admin/Sidebar_D";
 
 const CourseList = () => {
+  const courses = [
+    {
+      image: "src/assets/img8.png",
+      title: "Mobile application development using Flutter",
+      category: "Mobile Development",
+      profName: "Prof. Nikunj Vadher",
+    },
+    {
+      image: "src/assets/img13.png",
+      title: "Introduction to Python",
+      category: "AIML",
+      profName: "Prof. Snehal Sathwara",
+    },
+    {
+      image: "src/assets/img5.png",
+      title: "Introduction to JavaScript",
+      category: "Web Development",
+      profName: "Prof. Snehal Sathwara",
+    },
+    {
+      image: "src/assets/img19.png",
+      title: "Intoduction to Excel",
+      category: "Data Science",
+      profName: "Prof. Pervez Belim",
+    },
+    {
+      image: "src/assets/img9.png",
+      title: "Mobile application development using Flutter",
+      category: "Mobile Development",
+      profName: "Prof. Nikunj Vadher",
+    },
+    {
+      image: "src/assets/img15.png",
+      title: "Learn Scikit-learn ",
+      category: "AIML",
+      profName: "Prof. Nikunj Vadher",
+    },
+    {
+      image: "src/assets/img17.png",
+      title: "How to Use ChatGpt",
+      category: "AIML",
+      profName: "Prof. Nikunj Vadher",
+    },
+  ];
+
   return (
-    <div className="flex bg-gray-100 min-h-screen">
-      {/* Sidebar (Fixed) */}
-      <Sidebar_D />
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <div className="w-1/5 bg-gray-100">
+        <Sidebar_D />
+      </div>
 
-      {/* Main Content */}
-      <div className="ml-64 p-6 w-full">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">Course List</h2>
-
-        {/* Course Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.map((course, index) => (
-            <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105">
-              
-              {/* Image */}
-              <img 
-                src={course.image} 
-                alt={course.title} 
-                className="w-full h-40 object-cover"
-              />
-
-              {/* Content */}
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-900">{course.title}</h3>
-
-                {/* Skills */}
-                <p className="text-gray-600 text-sm mt-2">
-                  <span className="font-bold">Skills you'll gain: </span>
-                  {course.skills}
-                </p>
-
-                {/* View Button */}
-                <button className="mt-3 bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700">
-                  View
-                </button>
-              </div>
-
-            </div>
-          ))}
-        </div>
+      {/* Content */}
+      <div className="w-4/5 p-6 overflow-auto">
+        <h1 className="text-4xl font-bold text-center mb-6">Course List</h1>
+        <table className="min-w-full border border-black text-center">
+          <thead className="bg-gradient-to-r from-blue-100 to-blue-300">
+            <tr>
+              <th className="border px-4 py-2">Image</th>
+              <th className="border px-4 py-2">Title</th>
+              <th className="border px-4 py-2">Category</th>
+              <th className="border px-4 py-2">Prof. Name</th>
+              <th className="border px-4 py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {courses.map((course, index) => (
+              <tr key={index} className="border">
+                <td className="border p-2">
+                  <img src={course.image} alt={course.title} className="h-20 mx-auto" />
+                </td>
+                <td className="border p-2">{course.title}</td>
+                <td className="border p-2">{course.category}</td>
+                <td className="border p-2">{course.profName}</td>
+                <td className="border p-2 space-x-2">
+                  <button className="bg-black text-white px-4 py-1 rounded">Edit</button>
+                  <button className="bg-red-600 text-white px-4 py-1 rounded">Remove</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

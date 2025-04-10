@@ -1,9 +1,9 @@
-import React from "react";
 import Navbar from "../Navbar/Navbar";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import Blob from "../../assets/blob.svg";
 import HeroPng from "../../assets/hero.png";
-import { animate, motion } from "framer-motion";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom"; // <-- Import Link
 
 export const FadeUp = (delay) => {
   return {
@@ -42,19 +42,23 @@ const Hero = () => {
               Let's Learn to build a{" "}
               <span className="text-secondary">Website</span> for your business
             </motion.h1>
+
             <motion.div
               variants={FadeUp(0.8)}
               initial="initial"
               animate="animate"
               className="flex justify-center md:justify-start"
             >
-              <button className="primary-btn flex items-center gap-2 group">
-                Get Started
-                <IoIosArrowRoundForward className="text-xl group-hover:translate-x-2 group-hover:-rotate-45 duration-300" />
-              </button>
+              <Link to="/Courseselect"> 
+                <button className="primary-btn flex items-center gap-2 group">
+                  Get Started
+                  <IoIosArrowRoundForward className="text-xl group-hover:translate-x-2 group-hover:-rotate-45 duration-300" />
+                </button>
+              </Link>
             </motion.div>
           </div>
         </div>
+
         {/* Hero Image */}
         <div className="flex justify-center items-center">
           <motion.img
@@ -62,7 +66,7 @@ const Hero = () => {
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4, ease: "easeInOut" }}
             src={HeroPng}
-            alt=""
+            alt="Hero"
             className="w-[400px] xl:w-[600px] relative z-10 drop-shadow"
           />
           <motion.img
@@ -70,7 +74,7 @@ const Hero = () => {
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeInOut" }}
             src={Blob}
-            alt=""
+            alt="Blob"
             className="absolute -bottom-32 w-[800px] md:w-[1500px] z-[1] hidden md:block"
           />
         </div>

@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 const NavbarMenu = [
   { id: 1, title: "Home", path: "/" },
-  { id: 2, title: "Courses", path: "/courses" },
+  { id: 2, title: "Courses", path: "/Courseselect" },
   { id: 3, title: "About Us", path: "/about" },
   { id: 4, title: "Contact Us", path: "/contact" },
 ];
@@ -19,11 +19,9 @@ const Navbar = () => {
         animate={{ opacity: 1, y: 0 }}
         className="container py-10 flex justify-between items-center"
       >
-        {/* Logo section */}
-        <div>
-          <h1 className="font-bold text-2xl">Skill_Elevate</h1>
-        </div>
-
+      <Link to="/" className="text-2xl font-bold hover:text-secondary transition duration-300">
+          Skill_Elevate
+        </Link>
         {/* Menu section */}
         <div className="hidden lg:block">
           <ul className="flex items-center gap-6">

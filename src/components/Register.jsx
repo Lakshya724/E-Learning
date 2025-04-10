@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import { Link } from "react-router-dom"; // <-- Import Link
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    Name: "",
     mobile: "",
     email: "",
     password: "",
@@ -18,17 +18,14 @@ const Register = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#f4cdcd] p-4">
-      {/* Container */}
       <div
         className="flex flex-col md:flex-row w-full max-w-4xl bg-cover bg-center rounded-lg shadow-lg overflow-hidden"
         style={{ backgroundImage: "url(src/assets/Adminback.jpg)" }}
       >
-        {/* Left Side - Form */}
         <div className="w-full md:w-1/2 p-8 bg-white bg-opacity-15 animate-slide-down">
           <h2 className="text-2xl font-bold mb-6">Create a New Account</h2>
 
-          {/* Input Fields */}
-          {["firstName", "lastName", "mobile", "email", "password"].map((field, index) => (
+          {["Name", "mobile", "email", "password"].map((field, index) => (
             <div key={index} className="mb-4 relative">
               <label className="block text-gray-700 capitalize">{field.replace("Name", " Name")}:</label>
               <input
@@ -55,18 +52,19 @@ const Register = () => {
             </div>
           ))}
 
-          {/* Register Button */}
           <button className="w-full bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-600">
             Register
           </button>
 
-          {/* Login Link */}
+          {/* Replaced anchor tag with Link */}
           <p className="text-center text-gray-600 text-sm mt-4">
-            Already have an account? <a href="#" className="text-yellow-500 hover:underline">Login</a>
+            Already have an account?{" "}
+            <Link to="/login" className="text-yellow-500 hover:underline">
+              Login
+            </Link>
           </p>
         </div>
 
-        {/* Right Side - Image with Less Blur */}
         <div className="hidden md:flex w-1/2 items-center justify-center relative">
           <img
             src="src/assets/Adminfront.jpg"

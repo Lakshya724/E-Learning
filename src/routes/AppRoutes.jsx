@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "../components/Home";
 import AllCourses from "../components/Courses/AllCourses";
@@ -14,6 +13,11 @@ import AdminLogin from "../components/Admin/AdminLogin";
 import Sidebar_D from "../components/Admin/Sidebar_D";
 import Dashboard from "../components/Admin/Dashboard";
 import CourseList from "../components/Admin/CourseList";
+import AddCourse from "../components/Admin/AddCourse";
+import UserManagement from "../components/Admin/UserManagement";
+import Courseselect from "../components/Courses/Courseselect";
+import AboutUs from "../components/AboutUs";
+import ContactUs from "../components/ContactUs";
 
 const AppRoutes = () => {
   return (
@@ -32,6 +36,11 @@ const AppRoutes = () => {
       <Route path="/sidebar" element={<Sidebar_D />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/course-list" element={<CourseList />} />
+      <Route path="/add-course" element={<AddCourse />} />
+      <Route path="/user-management" element={<UserManagement />} />
+      <Route path="/Courseselect" element={<Courseselect />} />
+      <Route path="/about" element={<AboutUs />} />
+      <Route path="/contact" element={<ContactUs />} />
     </Routes>
   );
 };
