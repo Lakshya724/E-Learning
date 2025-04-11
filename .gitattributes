@@ -18,3 +18,5 @@ __snapshots__/** linguist-vendored
 
 # Ignore ajv's dot templates specifically (extra safe)
 node_modules/ajv/lib/dot/** linguist-vendored
+
+
