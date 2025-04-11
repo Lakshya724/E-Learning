@@ -1,17 +1,26 @@
 import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ChangePassword = () => {
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const [formData, setFormData] = useState({
     oldPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
+
   const [showPassword, setShowPassword] = useState({
     oldPassword: false,
     newPassword: false,
     confirmPassword: false,
   });
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,40 +34,68 @@ const ChangePassword = () => {
     }));
   };
 
-  return (
-    <div className="flex justify-center items-center min-h-screen bg-[#f4cdcd] p-4">
-      {/* Container */}
-      <div
-        className="flex flex-col md:flex-row w-full max-w-4xl bg-cover bg-center rounded-lg shadow-lg overflow-hidden"
-        style={{ backgroundImage: "url(src/assets/Adminback.jpg)" }}
-      >
-        {/* Left Side - Form */}
-        <div className="w-full md:w-1/2 p-8 bg-white bg-opacity-15 animate-slide-down">
-          <h2 className="text-2xl font-bold mb-6">Change Password</h2>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
 
-          {/* Input Fields */}
+    if (!user) {
+      setError("You must be logged in to change your password.");
+      return;
+    }
+
+    const { oldPassword, newPassword, confirmPassword } = formData;
+
+    if (newPassword !== confirmPassword) {
+      setError("New passwords do not match.");
+      return;
+    }
+
+    try {
+      const response = await axios.put(`http://localhost:5000/change-password/${user.id}`, {
+        oldPassword,
+        newPassword,
+      });
+
+      const updatedUser = { ...user, password: newPassword };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      setSuccess(response.data.message);
+      setTimeout(() => {
+        navigate("/profile");
+      }, 2000);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to change password. Please try again.");
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#f7f9fc] px-4">
+      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+        <h2 className="text-2xl md:text-3xl font-bold text-center text-[#e8cf41] mb-2">Change Password</h2>
+        <p className="text-center text-gray-500 mb-6">Please enter your old and new password</p>
+
+        <form onSubmit={handleSubmit}>
           {["oldPassword", "newPassword", "confirmPassword"].map((field, index) => (
             <div key={index} className="mb-4 relative">
-              <label className="block text-gray-700 capitalize">
+              <label className="block text-gray-700 mb-1 text-sm font-medium">
                 {field === "oldPassword"
                   ? "Old Password"
                   : field === "newPassword"
                   ? "New Password"
-                  : "Confirm Password"}
-                :
+                  : "Confirm New Password"}
               </label>
               <input
                 type={showPassword[field] ? "text" : "password"}
                 name={field}
-                placeholder={`Enter ${field === "oldPassword" ? "Old" : field === "newPassword" ? "New" : "Confirm"} Password`}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                placeholder={`Enter your ${field === "oldPassword" ? "current" : field === "newPassword" ? "new" : "new"} password`}
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b49df] text-sm"
                 value={formData[field]}
                 onChange={handleChange}
               />
-              {/* Toggle Password Visibility */}
               <button
                 type="button"
-                className="absolute right-3 top-9 text-gray-500 focus:outline-none"
+                className="absolute right-3 top-10 text-gray-500"
                 onClick={() => togglePasswordVisibility(field)}
               >
                 {showPassword[field] ? (
@@ -70,25 +107,24 @@ const ChangePassword = () => {
             </div>
           ))}
 
-          {/* Change Password Button */}
-          <button className="w-full bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-600">
+          {error && <p className="text-red-600 text-sm mb-2">{error}</p>}
+          {success && <p className="text-green-600 text-sm mb-2">{success}</p>}
+
+          <button
+            type="submit"
+            className="w-full bg-yellow-500 hover:bg-[#d1be31] text-white font-semibold py-3 rounded-lg transition"
+          >
             Change Password
           </button>
+        </form>
 
-
-        <p className="text-center text-gray-600 text-sm mt-4">
-              Back to <a href="/login" className="text-yellow-500 hover:underline">Login</a>
-            </p>
-        
-        </div>
-
-      
-        <div className="hidden md:flex w-1/2 items-center justify-center relative">
-          <img
-            src="src/assets/Adminfront.jpg"
-            alt="New Skill Loading"
-            className="w-3/4 rounded-lg shadow-md blur-[1px]"
-          />
+        <div className="border-t mt-6 pt-4 text-center">
+          <p className="text-sm text-gray-600">
+            Back to{" "}
+            <a href="/login" className="text-[#3b49df] font-medium hover:underline">
+              Login
+            </a>
+          </p>
         </div>
       </div>
     </div>
