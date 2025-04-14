@@ -1,11 +1,10 @@
-import React from "react";
-import Navbar from "../Navbar/Navbar"; // Import Navbar
-import Footer from "../Footer/Footer"; // Import Footer
+import { Link } from "react-router-dom"; // ✅ Import Link
+import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
 
 const AIML = () => {
   return (
     <div className="bg-gray-100">
-      {/* Navbar */}
       <Navbar />
 
       {/* Hero Section */}
@@ -55,9 +54,14 @@ const AIML = () => {
             />
             <h4 className="mt-2 font-semibold">{course.title}</h4>
             <p className="text-sm text-gray-600">{course.instructor}</p>
-            <button className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg">
+
+            {/* ✅ Link Wrapped Around Button */}
+            <Link
+              to="/AIML-course"
+              className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg inline-block"
+            >
               Free Learning
-            </button>
+            </Link>
           </div>
         ))}
       </div>
@@ -86,7 +90,6 @@ const AIML = () => {
         </p>
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
+import { Link } from "react-router-dom"; // Import Link
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 
@@ -16,7 +15,7 @@ export default function Mobile() {
       >
         <div className="absolute inset-0 bg-black opacity-30"></div>
         <div className="absolute inset-0 flex flex-col justify-center items-center text-white">
-          <h2 className="text-xl font-semibold">India's Most Loved Coding Community ❤️</h2>
+          <h2 className="text-xl font-semibold">India&apos;s Most Loved Coding Community ❤️</h2>
         </div>
       </div>
 
@@ -41,9 +40,14 @@ export default function Mobile() {
             <img src={course.image} alt={course.title} className="w-full h-32 rounded-lg object-cover" />
             <h4 className="mt-2 font-semibold">{course.title}</h4>
             <p className="text-sm text-gray-600">{course.instructor}</p>
-            <button className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg">
+
+            {/* Free Learning Button wrapped in Link */}
+            <Link
+              to={`/mobile-course-details`}
+              className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg block text-center"
+            >
               Free Learning
-            </button>
+            </Link>
           </div>
         ))}
       </div>
