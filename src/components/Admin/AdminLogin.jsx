@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
   const [formData, setFormData] = useState({
@@ -7,7 +7,7 @@ const AdminLogin = () => {
     password: "",
   });
 
-  const navigate = useNavigate(); // Hook to navigate programmatically
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,11 +16,15 @@ const AdminLogin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Admin Login Data:", formData);
-    
-    // Add any authentication logic here if needed
-    // After successful login:
-    navigate("/dashboard");
+
+    const { email, password } = formData;
+
+    if (email === "admin@gmail.com" && password === "admin123") {
+      console.log("✅ Admin login successful");
+      navigate("/dashboard");
+    } else {
+      alert("❌ Entered details are wrong");
+    }
   };
 
   return (
@@ -42,7 +46,6 @@ const AdminLogin = () => {
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
                 value={formData.email}
                 onChange={handleChange}
-              
               />
             </div>
             <div className="mb-6">
@@ -54,7 +57,6 @@ const AdminLogin = () => {
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
                 value={formData.password}
                 onChange={handleChange}
-               
               />
             </div>
             <button

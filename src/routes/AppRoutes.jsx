@@ -18,6 +18,12 @@ import UserManagement from "../components/Admin/UserManagement";
 import Courseselect from "../components/Courses/Courseselect";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
+import Profile from "../components/profile";
+import CourseDetails from "../components/Courses/CourseDetails";
+import MobileDevelopmentCourse from "../components/Courses/MobiledevelopmentCourse";
+import AIMLCourse from "../components/Courses/AIMLCourse";
+import DataScienceCourse from "../components/Courses/DataScienceCourse";
+
 
 const AppRoutes = () => {
   return (
@@ -41,6 +47,11 @@ const AppRoutes = () => {
       <Route path="/Courseselect" element={<Courseselect />} />
       <Route path="/about" element={<AboutUs />} />
       <Route path="/contact" element={<ContactUs />} />
+      <Route path="/Profile" element={<Profile />} />
+      <Route path="/course-details" element={<CourseDetails />} />
+      <Route path="/mobile-course-details" element={<MobileDevelopmentCourse />} />
+      <Route path="/AIML-course" element={<AIMLCourse />} />
+      <Route path="/DataScience-details" element={<DataScienceCourse />} />
     </Routes>
   );
 };

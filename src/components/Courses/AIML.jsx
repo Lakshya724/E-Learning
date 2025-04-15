@@ -15,7 +15,7 @@ const AIML = () => {
         <div className="absolute inset-0 bg-black opacity-30"></div>
         <div className="absolute inset-0 flex flex-col justify-center items-center text-white">
           <h2 className="text-xl font-semibold">
-            India's Most Loved Coding Community ❤️
+            India&apos;s Most Loved Coding Community ❤️
           </h2>
         </div>
       </div>
