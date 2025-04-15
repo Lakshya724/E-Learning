@@ -1,5 +1,5 @@
-import  { useState } from "react";
-import Sidebar_D from "../Admin/Sidebar_D"; // Import Sidebar
+import { useState } from "react";
+import Sidebar_D from "../Admin/Sidebar_D";
 
 const AddCourse = () => {
   const [courseData, setCourseData] = useState({
@@ -22,72 +22,98 @@ const AddCourse = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(courseData);
-    // You can add form submission logic here (e.g., API call)
+    // Add submission logic here
   };
 
   return (
-    <div className="flex min-h-screen bg-[#c7daf1]">
-      {/* Sidebar - Left */}
-      <div className="w-[250px] bg-white shadow-lg">
+    <div className="flex min-h-screen bg-[#e8f1fa]">
+      {/* Sidebar */}
+      <div className="w-[250px] bg-white shadow-md">
         <Sidebar_D />
       </div>
 
-      {/* Content - Right */}
-      <div className="flex-1 flex items-center justify-center p-6">
+      {/* Main Content */}
+      <div className="flex-1 flex items-center justify-center p-8">
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-10 rounded-md shadow-md flex flex-col md:flex-row items-center gap-8 border border-gray-300 max-w-4xl w-full"
+          className="bg-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row gap-10 w-full max-w-5xl border"
         >
-          {/* Left side - Inputs */}
-          <div className="flex flex-col gap-4 w-full md:w-1/2">
-            <h2 className="text-2xl font-bold text-center mb-4">Add Course</h2>
+          {/* Left Form Fields */}
+          <div className="flex flex-col gap-5 w-full md:w-1/2">
+            <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">
+              Add New Course
+            </h2>
 
             <input
               type="text"
               name="courseName"
-              placeholder="Course Name"
-              className="border border-yellow-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              placeholder="Title"
+              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={courseData.courseName}
               onChange={handleChange}
+              required
             />
 
             <input
               type="text"
               name="profName"
-              placeholder="Prof. Name"
-              className="border border-yellow-300 p-2 rounded-md"
+              placeholder="Professor Name"
+              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={courseData.profName}
               onChange={handleChange}
+              required
             />
+              <select
+                name="category"
+                value={courseData.category}
+                onChange={handleChange}
+                required
+                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <option value="" disabled>
+                  Select Category
+                </option>
+                <option value="Web">Web</option>
+                <option value="Mobile">Mobile</option>
+                <option value="AIML">AI/ML</option>
+                <option value="DataScience">Data Science</option>
+                <option value="Others">Others</option>
+              </select>
 
-            <input
-              type="text"
-              name="category"
-              placeholder="Category"
-              className="border border-yellow-300 p-2 rounded-md"
-              value={courseData.category}
-              onChange={handleChange}
-            />
+              {courseData.category === "Others" && (
+                <input
+                  type="text"
+                  name="otherCategory"
+                  placeholder="Enter Custom Category"
+                  className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  value={courseData.otherCategory || ""}
+                  onChange={(e) =>
+                    setCourseData({ ...courseData, otherCategory: e.target.value })
+                  }
+                  required
+                />
+              )}
 
             <textarea
               name="description"
               placeholder="Description"
-              className="border border-yellow-300 p-2 rounded-md h-20 resize-none"
+              className="p-3 border border-gray-300 rounded-lg h-28 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={courseData.description}
               onChange={handleChange}
+              required
             />
 
             <button
               type="submit"
-              className="bg-[#b7cce6] hover:bg-[#a3b9d4] text-black font-semibold py-2 rounded-full"
+              className="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition duration-200"
             >
-              Add
+              Add Course
             </button>
           </div>
 
-          {/* Right side - Upload */}
-          <div className="flex flex-col items-center w-full md:w-1/2">
-            <label className="cursor-pointer flex flex-col items-center">
+          {/* Right Image Upload */}
+          <div className="flex flex-col items-center justify-center w-full md:w-1/2 bg-blue-50 rounded-xl border border-dashed border-blue-300 p-6 hover:border-blue-500 transition">
+            <label className="cursor-pointer flex flex-col items-center justify-center">
               <img
                 src={
                   courseData.image
@@ -95,9 +121,9 @@ const AddCourse = () => {
                     : "https://img.icons8.com/ios-filled/100/upload.png"
                 }
                 alt="Upload"
-                className="w-24 h-24 object-contain"
+                className="w-28 h-28 object-contain mb-4"
               />
-              <span className="mt-2 font-semibold">Upload Image</span>
+              <span className="text-gray-700 font-medium">Upload Image</span>
               <input
                 type="file"
                 accept="image/*"
