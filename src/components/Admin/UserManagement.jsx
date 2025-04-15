@@ -1,45 +1,39 @@
-import Sidebar_D from "../Admin/Sidebar_D"; // Sidebar import
-
-const users = [
-  {
-    id: 1,
-    name: "Lakshya Kumar",
-    email: "lakshyakumar724@gmail.com",
-    mobile: "9135005985",
-    password: "lkumar12345",
-  },
-  {
-    id: 2,
-    name: "Sonu Kumar",
-    email: "Sonu@gmail.com",
-    mobile: "9135005985",
-    password: "Sonu123",
-  },
-  {
-    id: 3,
-    name: "Ajit Kumar",
-    email: "Ajit@gmail.com",
-    mobile: "7897454545",
-    password: "Ajit123",
-  },
-  {
-    id: 8,
-    name: "Ankit",
-    email: "Ankit@gmail.com",
-    mobile: "9896565655",
-    password: "Ankit123",
-  },
-];
+import { useEffect, useState } from "react";
+import Sidebar_D from "../Admin/Sidebar_D";
 
 const UserManagement = () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/users")
+      .then((res) => res.json())
+      .then((data) => setUsers(data))
+      .catch((err) => console.error("Error fetching users:", err));
+  }, []);
+
+  const handleRemove = (userId) => {
+    // Confirm the removal
+    const isConfirmed = window.confirm("Are you sure you want to remove this user?");
+    if (isConfirmed) {
+      // Make the API request to remove the user from the database
+      fetch(`http://localhost:5000/users/${userId}`, {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then(() => {
+          // If successful, remove the user from the local state
+          setUsers(users.filter((user) => user.id !== userId));
+        })
+        .catch((err) => console.error("Error removing user:", err));
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
       <div className="w-[250px] bg-white shadow-md">
         <Sidebar_D />
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 p-6">
         <div className="bg-red-400 text-white text-center text-2xl font-semibold py-4 rounded-md shadow-md mb-6">
           User Management
@@ -66,23 +60,17 @@ const UserManagement = () => {
                   <td className="py-2 px-4">{user.mobile}</td>
                   <td className="py-2 px-4">{user.password}</td>
                   <td className="py-2 px-4 flex gap-2">
-                    <button className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500">
-                      Edit
-                    </button>
-                    <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-                      Delete
+                    <button
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                      onClick={() => handleRemove(user.id)} // Call handleRemove when button clicked
+                    >
+                      Remove
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
-
-        <div className="mt-6">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-            Add New User
-          </button>
         </div>
       </div>
     </div>
