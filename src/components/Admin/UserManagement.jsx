@@ -12,10 +12,10 @@ const UserManagement = () => {
   }, []);
 
   const handleRemove = (userId) => {
-    // Confirm the removal
+
     const isConfirmed = window.confirm("Are you sure you want to remove this user?");
     if (isConfirmed) {
-      // Make the API request to remove the user from the database
+
       fetch(`http://localhost:5000/users/${userId}`, {
         method: "DELETE",
       })
