@@ -25,6 +25,7 @@ import AIMLCourse from "../components/Courses/AIMLCourse";
 import DataScienceCourse from "../components/Courses/DataScienceCourse";
 
 
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -52,6 +53,8 @@ const AppRoutes = () => {
       <Route path="/mobile-course-details" element={<MobileDevelopmentCourse />} />
       <Route path="/AIML-course" element={<AIMLCourse />} />
       <Route path="/DataScience-details" element={<DataScienceCourse />} />
+  
+
     </Routes>
   );
 };
