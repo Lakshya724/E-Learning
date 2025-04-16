@@ -2,10 +2,24 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import pg from "pg";
+import multer from "multer";
+import path from "path";
 
 const { Pool } = pg;
 const app = express();
 const port = 5000;
+
+// Set up Multer for file uploads
+const storage = multer.diskStorage({
+  destination: "uploads/", // folder where files will be stored
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Adds timestamp to filename
+  },
+});
+const upload = multer({ storage });
+
+// Serve static files (uploaded images) from the 'uploads' folder
+app.use("/uploads", express.static("uploads"));
 
 app.use(cors({ origin: "http://localhost:5173" }));
 app.use(bodyParser.json());
@@ -85,6 +99,7 @@ app.put("/update-user/:id", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
 // Get user by ID
 app.get("/get-user/:id", async (req, res) => {
   const userId = req.params.id;
@@ -109,7 +124,6 @@ app.put("/change-password/:id", async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
   try {
-    // Check if the user exists and validate old password
     const result = await pool.query("SELECT * FROM users WHERE id = $1", [userId]);
 
     if (result.rows.length === 0) {
@@ -122,7 +136,6 @@ app.put("/change-password/:id", async (req, res) => {
       return res.status(401).json({ message: "Old password is incorrect" });
     }
 
-    // Update password
     const updateResult = await pool.query(
       "UPDATE users SET password = $1 WHERE id = $2 RETURNING *",
       [newPassword, userId]
@@ -134,36 +147,100 @@ app.put("/change-password/:id", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-app.get('/users', async (req, res) => {
+
+app.get("/users", async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM users ORDER BY id ASC');
+    const result = await pool.query("SELECT * FROM users");
+    res.json(result.rows); // Send the users data as JSON
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// DELETE route for removing a user
+app.delete("/users/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query("DELETE FROM users WHERE id = $1", [id]);
+    if (result.rowCount > 0) {
+      res.json({ message: "User removed" });
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
+  } catch (err) {
+    console.error("Error removing user:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Add course with image upload (newly added)
+app.post("/add-course", upload.single("image"), async (req, res) => {
+  const { courseName, profName, category, description, otherCategory } = req.body;
+  const finalCategory = category === "Others" ? otherCategory : category;
+  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO courses (title, instructor, category, description, image) 
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [courseName, profName, finalCategory, description, imagePath]
+    );
+
+    res.status(201).json({ success: true, course: result.rows[0] });
+  } catch (err) {
+    console.error("Error inserting course:", err);
+    res.status(500).json({ success: false, message: "Something went wrong!" });
+  }
+});
+
+// Get all courses or filter by category
+app.get("/courses", async (req, res) => {
+  const { category } = req.query; // Getting category from query parameter
+
+  try {
+    const query = category
+      ? "SELECT * FROM courses WHERE category = $1"
+      : "SELECT * FROM courses"; // If no category is provided, fetch all courses
+    const result = await pool.query(query, category ? [category] : []);
+
     res.status(200).json(result.rows);
   } catch (error) {
-    console.error('❌ Error fetching users:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("❌ Error fetching courses:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
-// Delete a user by ID
-app.delete('/users/:id', async (req, res) => {
-  const userId = req.params.id;
+app.put("/courses/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, category, instructor } = req.body;
 
   try {
-    const result = await pool.query('DELETE FROM users WHERE id = $1', [userId]);
-
-    if (result.rowCount === 0) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.status(200).json({ message: 'User deleted successfully' });
+    const result = await pool.query(
+      "UPDATE courses SET title = $1, category = $2, instructor = $3 WHERE id = $4 RETURNING *",
+      [title, category, instructor, id]
+    );
+    res.json(result.rows[0]);
   } catch (err) {
-    console.error('❌ Error deleting user:', err);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+// DELETE course by ID
+app.delete("/courses/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await pool.query("DELETE FROM courses WHERE id = $1", [id]);
+    res.json({ message: "Course deleted successfully" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
 
-// Start server
+// Start the server
 app.listen(port, () => {
   console.log(`🚀 Backend running on http://localhost:${port}`);
 });
