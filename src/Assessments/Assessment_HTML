@@ -1,0 +1,143 @@
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+const questions = [
+  {
+    question: "What does HTML stand for?",
+    options: [
+      "Hyper Text Markup Language",
+      "HighText Machine Language",
+      "Hyperlinks and Text Markup Language",
+      "None of the above"
+    ],
+    answer: 0
+  },
+  {
+    question: "Who is making the Web standards?",
+    options: ["Mozilla", "Google", "Microsoft", "W3C"],
+    answer: 3
+  },
+  {
+    question: "Choose the correct HTML element for the largest heading:",
+    options: ["<heading>", "<h1>", "<h6>", "<head>"],
+    answer: 1
+  },
+  {
+    question: "What is the correct HTML element for inserting a line break?",
+    options: ["<break>", "<br>", "<lb>", "<line>"],
+    answer: 1
+  },
+  {
+    question: "Which character is used to indicate an end tag?",
+    options: ["/", "<", "*", "^"],
+    answer: 0
+  },
+  {
+    question: "How can you make a numbered list?",
+    options: ["<ul>", "<ol>", "<dl>", "<list>"],
+    answer: 1
+  },
+  {
+    question: "What is the correct HTML for making a text input field?",
+    options: [
+      "<input type='text'>",
+      "<textfield>",
+      "<textinput type='text'>",
+      "<inputtext>"
+    ],
+    answer: 0
+  },
+  {
+    question: "What is the correct HTML for creating a hyperlink?",
+    options: [
+      "<a>http://example.com</a>",
+      "<a href='http://example.com'>Example</a>",
+      "<link href='http://example.com'>",
+      "<a url='http://example.com'>Example</a>"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which HTML element defines the title of a document?",
+    options: ["<meta>", "<head>", "<title>", "<header>"],
+    answer: 2
+  },
+  {
+    question: "Which HTML attribute specifies an alternate text for an image?",
+    options: ["title", "alt", "src", "longdesc"],
+    answer: 1
+  }
+];
+
+export default function AssessmentPage() {
+  const [answers, setAnswers] = useState(Array(questions.length).fill(null));
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleAnswer = (questionIndex, optionIndex) => {
+    const newAnswers = [...answers];
+    newAnswers[questionIndex] = optionIndex;
+    setAnswers(newAnswers);
+  };
+
+  const handleSubmit = () => {
+    setSubmitted(true);
+  };
+
+  const score = answers.reduce((total, ans, idx) => {
+    return ans === questions[idx].answer ? total + 2 : total;
+  }, 0);
+
+  const percentage = (score / (questions.length * 2)) * 100;
+  const passed = percentage >= 70;
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">HTML Assessment</h1>
+      {questions.map((q, index) => (
+        <Card key={index} className="mb-4">
+          <CardContent>
+            <h2 className="font-semibold mb-2">
+              {index + 1}. {q.question}
+            </h2>
+            <div className="space-y-2">
+              {q.options.map((option, optIdx) => (
+                <label key={optIdx} className="block">
+                  <input
+                    type="radio"
+                    name={`question-${index}`}
+                    value={optIdx}
+                    checked={answers[index] === optIdx}
+                    onChange={() => handleAnswer(index, optIdx)}
+                    disabled={submitted}
+                    className="mr-2"
+                  />
+                  {option}
+                </label>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+
+      {!submitted ? (
+        <Button onClick={handleSubmit}>Submit Assessment</Button>
+      ) : (
+        <div className="mt-6">
+          <p className="text-xl font-semibold">
+            You scored {score} out of {questions.length * 2} ({percentage.toFixed(1)}%)
+          </p>
+          {passed ? (
+            <p className="text-green-600 text-lg mt-2 font-bold">
+              Congratulations! You scored more than 70% and received an award!
+            </p>
+          ) : (
+            <p className="text-red-600 text-lg mt-2 font-bold">
+              You did not score enough for an award. Try again!
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}  
