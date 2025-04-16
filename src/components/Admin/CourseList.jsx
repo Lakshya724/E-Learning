@@ -1,50 +1,63 @@
+import { useEffect, useState } from "react";
 import Sidebar_D from "../Admin/Sidebar_D";
+import axios from "axios";
 
 const CourseList = () => {
-  const courses = [
-    {
-      image: "src/assets/img8.png",
-      title: "Mobile application development using Flutter",
-      category: "Mobile Development",
-      profName: "Prof. Nikunj Vadher",
-    },
-    {
-      image: "src/assets/img13.png",
-      title: "Introduction to Python",
-      category: "AIML",
-      profName: "Prof. Snehal Sathwara",
-    },
-    {
-      image: "src/assets/img5.png",
-      title: "Introduction to JavaScript",
-      category: "Web Development",
-      profName: "Prof. Snehal Sathwara",
-    },
-    {
-      image: "src/assets/img19.png",
-      title: "Intoduction to Excel",
-      category: "Data Science",
-      profName: "Prof. Pervez Belim",
-    },
-    {
-      image: "src/assets/img9.png",
-      title: "Mobile application development using Flutter",
-      category: "Mobile Development",
-      profName: "Prof. Nikunj Vadher",
-    },
-    {
-      image: "src/assets/img15.png",
-      title: "Learn Scikit-learn ",
-      category: "AIML",
-      profName: "Prof. Nikunj Vadher",
-    },
-    {
-      image: "src/assets/img17.png",
-      title: "How to Use ChatGpt",
-      category: "AIML",
-      profName: "Prof. Nikunj Vadher",
-    },
-  ];
+  const [courses, setCourses] = useState([]);
+  const [editingCourse, setEditingCourse] = useState(null);
+  const [editForm, setEditForm] = useState({
+    title: "",
+    category: "",
+    instructor: ""
+  });
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const fetchCourses = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/courses");
+      setCourses(res.data);
+    } catch (err) {
+      console.error("Error fetching courses:", err);
+    }
+  };
+
+  const handleEditClick = (course) => {
+    setEditingCourse(course);
+    setEditForm({
+      title: course.title,
+      category: course.category,
+      instructor: course.instructor
+    });
+  };
+
+  const handleEditChange = (e) => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.put(`http://localhost:5000/courses/${editingCourse.id}`, editForm);
+      setEditingCourse(null);
+      fetchCourses(); // Refresh list
+    } catch (err) {
+      console.error("Error updating course:", err);
+    }
+  };
+
+  const handleRemove = async (id) => {
+    if (window.confirm("Are you sure you want to delete this course?")) {
+      try {
+        await axios.delete(`http://localhost:5000/courses/${id}`);
+        setCourses(courses.filter(course => course.id !== id));
+      } catch (err) {
+        console.error("Error deleting course:", err);
+      }
+    }
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -62,7 +75,8 @@ const CourseList = () => {
               <th className="border px-4 py-2">Image</th>
               <th className="border px-4 py-2">Title</th>
               <th className="border px-4 py-2">Category</th>
-              <th className="border px-4 py-2">Prof. Name</th>
+              <th className="border px-4 py-2">Instructor</th>
+              <th className="border px-4 py-2">Created At</th>
               <th className="border px-4 py-2">Actions</th>
             </tr>
           </thead>
@@ -70,19 +84,84 @@ const CourseList = () => {
             {courses.map((course, index) => (
               <tr key={index} className="border">
                 <td className="border p-2">
-                  <img src={course.image} alt={course.title} className="h-20 mx-auto" />
+                  <img
+                    src={`http://localhost:5000${course.image}`}
+                    alt={course.title}
+                    className="h-20 mx-auto"
+                  />
                 </td>
                 <td className="border p-2">{course.title}</td>
                 <td className="border p-2">{course.category}</td>
-                <td className="border p-2">{course.profName}</td>
+                <td className="border p-2">{course.instructor}</td>
+                <td className="border p-2">
+                  {new Date(course.created_at).toLocaleDateString()}
+                </td>
                 <td className="border p-2 space-x-2">
-                  <button className="bg-black text-white px-4 py-1 rounded">Edit</button>
-                  <button className="bg-red-600 text-white px-4 py-1 rounded">Remove</button>
+                  <button
+                    onClick={() => handleEditClick(course)}
+                    className="bg-black text-white px-4 py-1 rounded"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleRemove(course.id)}
+                    className="bg-red-600 text-white px-4 py-1 rounded"
+                  >
+                    Remove
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+
+        {/* Edit Form (Inline below table) */}
+        {editingCourse && (
+          <div className="mt-8 p-4 border rounded shadow-lg bg-white w-full max-w-md mx-auto">
+            <h2 className="text-xl font-semibold mb-4">Edit Course</h2>
+            <form onSubmit={handleEditSubmit} className="space-y-4">
+              <input
+                type="text"
+                name="title"
+                value={editForm.title}
+                onChange={handleEditChange}
+                placeholder="Course Title"
+                className="w-full border p-2 rounded"
+              />
+              <input
+                type="text"
+                name="category"
+                value={editForm.category}
+                onChange={handleEditChange}
+                placeholder="Category"
+                className="w-full border p-2 rounded"
+              />
+              <input
+                type="text"
+                name="instructor"
+                value={editForm.instructor}
+                onChange={handleEditChange}
+                placeholder="Instructor"
+                className="w-full border p-2 rounded"
+              />
+              <div className="flex justify-end gap-2">
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-4 py-1 rounded"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditingCourse(null)}
+                  className="bg-gray-400 text-white px-4 py-1 rounded"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );
