@@ -1,11 +1,23 @@
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
-import { Link } from "react-router-dom"; // Import Link
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-const Home = () => {
+const WebDev = () => {
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    const category = "Web";
+
+    axios
+      .get(`http://localhost:5000/courses?category=${category}`)
+      .then((res) => setCourses(res.data))
+      .catch((err) => console.error("❌ Failed to load courses:", err));
+  }, []);
+
   return (
     <div className="bg-gray-100">
-      {/* Navbar */}
       <Navbar />
 
       {/* Hero Section */}
@@ -33,24 +45,32 @@ const Home = () => {
         ))}
       </div>
 
-      {/* Course Cards Section */}
+      {/* Course Cards */}
       <div className="flex justify-center flex-wrap gap-7 px-10">
-        {courses.map((course, index) => (
-          <div key={index} className="w-60 p-4 bg-white shadow-lg rounded-lg text-center">
-            <img src={course.image} alt={course.title} className="w-full h-32 rounded-lg" />
-            <h4 className="mt-2 font-semibold">{course.title}</h4>
-            <p className="text-sm text-gray-600">{course.instructor}</p>
-            <Link
-              to="/course-details" // Update this route as per your app
-              className="mt-2 inline-block bg-blue-600 text-white px-3 py-1 rounded-lg"
-            >
-              Free Learning
-            </Link>
-          </div>
-        ))}
+        {courses.length > 0 ? (
+          courses.map((course, index) => (
+            <div key={index} className="w-60 p-4 bg-white shadow-lg rounded-lg text-center">
+              <img
+                src={`http://localhost:5000${course.image}`}
+                alt={course.title}
+                className="w-full h-32 rounded-lg object-cover"
+              />
+              <h4 className="mt-2 font-semibold">{course.title}</h4>
+              <p className="text-sm text-gray-600">{course.instructor}</p>
+              <Link
+                to="/course-details"
+                className="mt-2 inline-block bg-blue-600 text-white px-3 py-1 rounded-lg"
+              >
+                Free Learning
+              </Link>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-600">No courses found for Web Development.</p>
+        )}
       </div>
 
-      {/* Learners Section */}
+      {/* Learners */}
       <div className="bg-[#fdfce8] py-8 text-center mt-20">
         <h3 className="text-lg font-semibold text-black">Some of our Learners</h3>
         <div className="flex justify-center mt-5 space-x-10">
@@ -65,49 +85,19 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Full-width text section */}
+      {/* Footer Note */}
       <div className="bg-[#7a739d] text-white text-center py-4 mt-0 mb-[5px]">
         <p className="text-lg font-medium">Our learners can access content from anywhere in the world.</p>
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
 };
 
-export default Home;
+export default WebDev;
 
-// Sample Data for Courses
-const courses = [
-  {
-    image: "src/assets/img1.jpg",
-    title: "HTML Complete Basic Level 1",
-    instructor: "Prof. Nikunj Vadher",
-  },
-  {
-    image: "src/assets/img2.png",
-    title: "HTML Complete Average Level",
-    instructor: "Prof. Nikunj Vadher",
-  },
-  {
-    image: "src/assets/img3.png",
-    title: "Complete CSS: Beginner to Advanced",
-    instructor: "Prof. Nikunj Vadher",
-  },
-  {
-    image: "src/assets/img4.png",
-    title: "Complete JavaScript",
-    instructor: "Prof. Nikunj Vadher",
-  },
-  {
-    image: "src/assets/img5.png",
-    title: "Complete React",
-    instructor: "Prof. Nikunj Vadher",
-  },
-];
-
-// Learner Images
+// Sample Learner Images
 const learners = [
   { image: "src/assets/L_img1.webp" },
   { image: "src/assets/L_img2.jpg" },

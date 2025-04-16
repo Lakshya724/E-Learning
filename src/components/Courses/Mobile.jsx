@@ -1,8 +1,37 @@
-import { Link } from "react-router-dom"; // Import Link
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
+import axios from "axios"; // Make sure axios is installed
 
 export default function Mobile() {
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    // Fetch all courses and filter those with category "Mobile"
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/courses"); // Replace with your backend URL
+        const mobileCourses = response.data.filter(
+          (course) => course.category === "Mobile"
+        );
+        setCourses(mobileCourses);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  const learners = [
+    { image: "/src/assets/L_img1.webp" },
+    { image: "/src/assets/L_img2.jpg" },
+    { image: "/src/assets/L_img3.webp" },
+    { image: "/src/assets/L_img4.jpg" },
+    { image: "/src/assets/L_img5.webp" },
+  ];
+
   return (
     <div className="bg-gray-100">
       {/* Navbar */}
@@ -35,21 +64,28 @@ export default function Mobile() {
 
       {/* Course Cards Section */}
       <div className="flex justify-center flex-wrap gap-7 px-10">
-        {courses.map((course, index) => (
-          <div key={index} className="w-60 p-4 bg-white shadow-lg rounded-lg text-center">
-            <img src={course.image} alt={course.title} className="w-full h-32 rounded-lg object-cover" />
-            <h4 className="mt-2 font-semibold">{course.title}</h4>
-            <p className="text-sm text-gray-600">{course.instructor}</p>
+        {courses.length > 0 ? (
+          courses.map((course, index) => (
+            <div key={index} className="w-60 p-4 bg-white shadow-lg rounded-lg text-center">
+              <img
+                src={`http://localhost:5000${course.image}`}
+                alt={course.title}
+                className="w-full h-32 rounded-lg object-cover"
+              />
+              <h4 className="mt-2 font-semibold">{course.title}</h4>
+              <p className="text-sm text-gray-600">{course.instructor}</p>
 
-            {/* Free Learning Button wrapped in Link */}
-            <Link
-              to={`/mobile-course-details`}
-              className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg block text-center"
-            >
-              Free Learning
-            </Link>
-          </div>
-        ))}
+              <Link
+                to={`/mobile-course-details`}
+                className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg block text-center"
+              >
+                Free Learning
+              </Link>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500 mt-4">No mobile courses available right now.</p>
+        )}
       </div>
 
       {/* Learners Section */}
@@ -77,21 +113,3 @@ export default function Mobile() {
     </div>
   );
 }
-
-// Sample Data for Courses
-const courses = [
-  { image: "/src/assets/img7.png", title: "Introduction to Mobile App Development & more", instructor: "Prof. Pervez Belim" },
-  { image: "/src/assets/img8.png", title: "Introduction to Mobile App Development & more", instructor: "Prof. Pervez Belim" },
-  { image: "/src/assets/img9.png", title: "Introduction to Mobile App Development & more", instructor: "Prof. Pervez Belim" },
-  { image: "/src/assets/img10.png", title: "Introduction to Mobile App Development & more", instructor: "Prof. Pervez Belim" },
-  { image: "/src/assets/img11.png", title: "Introduction to Mobile App Development & more", instructor: "Prof. Pervez Belim" },
-];
-
-// Learner Images
-const learners = [
-  { image: "/src/assets/L_img1.webp" },
-  { image: "/src/assets/L_img2.jpg" },
-  { image: "/src/assets/L_img3.webp" },
-  { image: "/src/assets/L_img4.jpg" },
-  { image: "/src/assets/L_img5.webp" },
-];

@@ -1,10 +1,34 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
-import { Link } from "react-router-dom"; // Import Link
-import Navbar from "../Navbar/Navbar"; // Import Navbar
-import Footer from "../Footer/Footer"; // Import Footer
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
 
 const Data = () => {
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/courses");
+        const data = await res.json();
+        const filtered = data.filter(course => course.category === "DataScience");
+        setCourses(filtered);
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  const learners = [
+    { image: "src/assets/L_img1.webp" },
+    { image: "src/assets/L_img2.jpg" },
+    { image: "src/assets/L_img3.webp" },
+    { image: "src/assets/L_img4.jpg" },
+    { image: "src/assets/L_img5.webp" },
+  ];
+
   return (
     <div className="bg-gray-100">
       {/* Navbar */}
@@ -44,26 +68,30 @@ const Data = () => {
 
       {/* Course Cards Section */}
       <div className="flex justify-center flex-wrap gap-7 px-10">
-        {courses.map((course, index) => (
-          <div
-            key={index}
-            className="w-60 p-4 bg-white shadow-lg rounded-lg text-center"
-          >
-            <img
-              src={course.image}
-              alt={course.title}
-              className="w-full h-32 rounded-lg object-cover"
-            />
-            <h4 className="mt-2 font-semibold">{course.title}</h4>
-            <p className="text-sm text-gray-600">{course.instructor}</p>
-            <Link
-              to="/DataScience-details"
-              className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg inline-block"
+        {courses.length > 0 ? (
+          courses.map((course, index) => (
+            <div
+              key={index}
+              className="w-60 p-4 bg-white shadow-lg rounded-lg text-center"
             >
-              Free Learning
-            </Link>
-          </div>
-        ))}
+              <img
+                src={`http://localhost:5000${course.image}`}
+                alt={course.title}
+                className="w-full h-32 rounded-lg object-cover"
+              />
+              <h4 className="mt-2 font-semibold">{course.title}</h4>
+              <p className="text-sm text-gray-600">{course.instructor}</p>
+              <Link
+                to="/DataScience-details"
+                className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg inline-block"
+              >
+                Free Learning
+              </Link>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-600">No courses found for Data Science.</p>
+        )}
       </div>
 
       {/* Learners Section */}
@@ -97,41 +125,3 @@ const Data = () => {
 };
 
 export default Data;
-
-// Sample Data for Courses
-const courses = [
-  {
-    image: "src/assets/img19.png",
-    title: "Introduction to Data Science",
-    instructor: "Prof. Snehal Sathwara ",
-  },
-  {
-    image: "src/assets/img20.jpg",
-    title: "Introduction to Data Science",
-    instructor: "Prof. Chhaya Patel",
-  },
-  {
-    image: "src/assets/img21.png",
-    title: "Introduction to Data Science",
-    instructor: "Prof. Chetan Shingadiya",
-  },
-  {
-    image: "src/assets/img13.png",
-    title: "Introduction to Data Science",
-    instructor: "Prof. Chhaya Patel",
-  },
-  {
-    image: "src/assets/img23.png",
-    title: "Introduction to Data Science",
-    instructor: "Prof. Pervez Belim",
-  },
-];
-
-// Learner Images
-const learners = [
-  { image: "src/assets/L_img1.webp" },
-  { image: "src/assets/L_img2.jpg" },
-  { image: "src/assets/L_img3.webp" },
-  { image: "src/assets/L_img4.jpg" },
-  { image: "src/assets/L_img5.webp" },
-];

@@ -1,8 +1,35 @@
-import { Link } from "react-router-dom"; // ✅ Import Link
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 
 const AIML = () => {
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/courses"); // Adjust the URL if needed
+        const data = await res.json();
+        const aimlCourses = data.filter((course) => course.category === "AIML");
+        setCourses(aimlCourses);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  // Learner Images (You can keep this static for now)
+  const learners = [
+    { image: "src/assets/L_img1.webp" },
+    { image: "src/assets/L_img2.jpg" },
+    { image: "src/assets/L_img3.webp" },
+    { image: "src/assets/L_img4.jpg" },
+    { image: "src/assets/L_img5.webp" },
+  ];
+
   return (
     <div className="bg-gray-100">
       <Navbar />
@@ -48,14 +75,13 @@ const AIML = () => {
             className="w-60 p-4 bg-white shadow-lg rounded-lg text-center"
           >
             <img
-              src={course.image}
+             src={`http://localhost:5000${course.image}`}
               alt={course.title}
-              className="w-full h-32 rounded-lg"
+              className="w-full h-32 rounded-lg object-cover"
             />
             <h4 className="mt-2 font-semibold">{course.title}</h4>
             <p className="text-sm text-gray-600">{course.instructor}</p>
 
-            {/* ✅ Link Wrapped Around Button */}
             <Link
               to="/AIML-course"
               className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg inline-block"
@@ -96,41 +122,3 @@ const AIML = () => {
 };
 
 export default AIML;
-
-// Sample Data for Courses
-const courses = [
-  {
-    image: "src/assets/img13.png",
-    title: "Introduction to Python",
-    instructor: "Prof. Snehal Sathwara ",
-  },
-  {
-    image: "src/assets/img18.png",
-    title: "Introduction to Python",
-    instructor: "Prof. Chhaya Patel",
-  },
-  {
-    image: "src/assets/img15.png",
-    title: "Introduction to Python",
-    instructor: "Prof. Chetan Shingadiya",
-  },
-  {
-    image: "src/assets/img16.png",
-    title: "Introduction to Python",
-    instructor: "Prof. Chhaya Patel",
-  },
-  {
-    image: "src/assets/img17.png",
-    title: "Introduction to Python",
-    instructor: "Prof. Pervez Belim",
-  },
-];
-
-// Learner Images
-const learners = [
-  { image: "src/assets/L_img1.webp" },
-  { image: "src/assets/L_img2.jpg" },
-  { image: "src/assets/L_img3.webp" },
-  { image: "src/assets/L_img4.jpg" },
-  { image: "src/assets/L_img5.webp" },
-];
