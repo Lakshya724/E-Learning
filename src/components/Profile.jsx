@@ -26,7 +26,7 @@ const Profile = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(http://localhost:5000/update-user/${user.id}, {
+      const response = await fetch("http://localhost:5000/update-user/${user.id}", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -108,8 +108,7 @@ const Profile = () => {
         </button>
       </form>
     </div>
-
   );
+};
 
-
-export default Profile;
+  export default Profile;
