@@ -1,0 +1,151 @@
+import  { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+const questions = [
+  {
+    question: "What is the main goal of data science?",
+    options: [
+      "To clean data",
+      "To create visualizations",
+      "To extract insights and knowledge from data",
+      "To collect data"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of these is a popular programming language for Data Science?",
+    options: ["HTML", "Python", "CSS", "PHP"],
+    answer: 1
+  },
+  {
+    question: "What is the purpose of data cleaning?",
+    options: [
+      "To delete unnecessary files",
+      "To ensure data quality by handling missing or inconsistent data",
+      "To compress data",
+      "To enhance system performance"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which library is used for data manipulation in Python?",
+    options: ["NumPy", "TensorFlow", "pandas", "scikit-learn"],
+    answer: 2
+  },
+  {
+    question: "What does a confusion matrix show?",
+    options: [
+      "File format structure",
+      "Accuracy and error metrics",
+      "Network configuration",
+      "Mathematical formula"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which technique is used for reducing dimensionality?",
+    options: ["Regression", "Classification", "PCA", "SVM"],
+    answer: 2
+  },
+  {
+    question: "Which one is an example of supervised learning?",
+    options: ["K-Means Clustering", "Linear Regression", "Apriori Algorithm", "Dimensionality Reduction"],
+    answer: 1
+  },
+  {
+    question: "What does overfitting mean in machine learning?",
+    options: [
+      "Model performs well on new data",
+      "Model learns patterns and generalizes",
+      "Model memorizes training data and fails on new data",
+      "Model is too slow to train"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is a common tool used for Data Visualization?",
+    options: ["Jupyter", "Matplotlib", "PyTorch", "SciPy"],
+    answer: 1
+  },
+  {
+    question: "Which of the following is a classification algorithm?",
+    options: ["KNN", "K-Means", "PCA", "DBSCAN"],
+    answer: 0
+  }
+];
+
+export default function DataScienceAssessment() {
+  const [answers, setAnswers] = useState(Array(questions.length).fill(null));
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleAnswer = (questionIndex, optionIndex) => {
+    const newAnswers = [...answers];
+    newAnswers[questionIndex] = optionIndex;
+    setAnswers(newAnswers);
+  };
+
+  const handleSubmit = () => {
+    setSubmitted(true);
+  };
+
+  const score = answers.reduce((total, ans, idx) => {
+    return ans === questions[idx].answer ? total + 2 : total;
+  }, 0);
+
+  const percentage = (score / (questions.length * 2)) * 100;
+  const passed = percentage >= 70;
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Data Science Assessment</h1>
+      <p className="mb-6 text-lg">
+        Each question carries 2 marks. Score more than 70% to receive an award!
+      </p>
+      {questions.map((q, index) => (
+        <Card key={index} className="mb-4">
+          <CardContent>
+            <h2 className="font-semibold mb-2">
+              {index + 1}. {q.question}
+            </h2>
+            <div className="space-y-2">
+              {q.options.map((option, optIdx) => (
+                <label key={optIdx} className="block">
+                  <input
+                    type="radio"
+                    name={`question-${index}`}
+                    value={optIdx}
+                    checked={answers[index] === optIdx}
+                    onChange={() => handleAnswer(index, optIdx)}
+                    disabled={submitted}
+                    className="mr-2"
+                  />
+                  {option}
+                </label>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+
+      {!submitted ? (
+        <Button onClick={handleSubmit}>Submit Assessment</Button>
+      ) : (
+        <div className="mt-6">
+          <p className="text-xl font-semibold">
+            You scored {score} out of {questions.length * 2} ({percentage.toFixed(1)}%)
+          </p>
+          {passed ? (
+            <p className="text-green-600 text-lg mt-2 font-bold">
+              Congratulations! You scored more than 70% and received an award!
+            </p>
+          ) : (
+            <p className="text-red-600 text-lg mt-2 font-bold">
+              You did not score enough for an award. Try again!
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
