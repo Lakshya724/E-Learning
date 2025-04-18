@@ -47,7 +47,7 @@ export default function ContactUs() {
                 For general inquiries and partnerships
               </p>
               <a href="mailto:hello@example.com" className="text-blue-600 font-medium hover:underline">
-                hello@example.com
+                Lkumar769@rku.ac.in
               </a>
             </div>
           </div>
@@ -62,8 +62,8 @@ export default function ContactUs() {
               <p className="text-gray-600 mb-4">
                 Available Monday-Friday, 9am-5pm
               </p>
-              <a href="tel:+1234567890" className="text-green-600 font-medium hover:underline">
-                +1 (234) 567-890
+              <a href="tel:+919135005985" className="text-green-600 font-medium hover:underline">
+                +91 9135005985
               </a>
             </div>
           </div>
@@ -79,7 +79,8 @@ export default function ContactUs() {
                 Our headquarters location
               </p>
               <address className="text-yellow-600 font-medium not-italic">
-                123 Learning St, Edu City
+                Rk University Main Campus <br />
+                Rajkot
               </address>
             </div>
           </div>
@@ -167,7 +168,7 @@ export default function ContactUs() {
                   <div className="ml-4">
                     <h4 className="text-sm font-medium text-gray-500">Email</h4>
                     <a href="mailto:hello@example.com" className="text-gray-900 hover:text-indigo-600">
-                      hello@example.com
+                      Lkumar769@rku.ac.in
                     </a>
                   </div>
                 </div>
@@ -179,7 +180,7 @@ export default function ContactUs() {
                   <div className="ml-4">
                     <h4 className="text-sm font-medium text-gray-500">Phone</h4>
                     <a href="tel:+1234567890" className="text-gray-900 hover:text-indigo-600">
-                      +1 (234) 567-890
+                     +91 9135005985
                     </a>
                   </div>
                 </div>
@@ -191,9 +192,9 @@ export default function ContactUs() {
                   <div className="ml-4">
                     <h4 className="text-sm font-medium text-gray-500">Address</h4>
                     <address className="text-gray-900 not-italic">
-                      123 Learning Street<br />
-                      Edu City, EC 12345<br />
-                      United States
+                      Rk University Main Campus <br />
+                      Rajkot 845420<br />
+                      India
                     </address>
                   </div>
                 </div>

@@ -6,9 +6,10 @@ import axios from "axios"; // Make sure axios is installed
 
 export default function Mobile() {
   const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]); // State for filtered courses
 
+  // Fetch courses when the component mounts
   useEffect(() => {
-    // Fetch all courses and filter those with category "Mobile"
     const fetchCourses = async () => {
       try {
         const response = await axios.get("http://localhost:5000/courses"); // Replace with your backend URL
@@ -16,6 +17,7 @@ export default function Mobile() {
           (course) => course.category === "Mobile"
         );
         setCourses(mobileCourses);
+        setFilteredCourses(mobileCourses); // Initially, show all Mobile courses
       } catch (error) {
         console.error("Error fetching courses:", error);
       }
@@ -23,6 +25,25 @@ export default function Mobile() {
 
     fetchCourses();
   }, []);
+
+  // Handle search functionality, fired from Navbar
+  useEffect(() => {
+    const handleSearch = (e) => {
+      const searchTerm = e.detail.toLowerCase();
+      const filtered = courses.filter(
+        (course) =>
+          course.title.toLowerCase().includes(searchTerm) ||
+          course.instructor.toLowerCase().includes(searchTerm)
+      );
+      setFilteredCourses(filtered);
+    };
+
+    window.addEventListener("courseSearch", handleSearch);
+
+    return () => {
+      window.removeEventListener("courseSearch", handleSearch);
+    };
+  }, [courses]);
 
   const learners = [
     { image: "/src/assets/L_img1.webp" },
@@ -64,8 +85,8 @@ export default function Mobile() {
 
       {/* Course Cards Section */}
       <div className="flex justify-center flex-wrap gap-7 px-10">
-        {courses.length > 0 ? (
-          courses.map((course, index) => (
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map((course, index) => (
             <div key={index} className="w-60 p-4 bg-white shadow-lg rounded-lg text-center">
               <img
                 src={`http://localhost:5000${course.image}`}

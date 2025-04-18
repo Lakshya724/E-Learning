@@ -49,14 +49,25 @@ const Navbar = () => {
   };
 
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+    const value = e.target.value;
+    setSearchQuery(value);
+  
+    // Dispatch event on each keystroke
+    const event = new CustomEvent("courseSearch", {
+      detail: value,
+    });
+    window.dispatchEvent(event);
   };
+  
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    // Implement search functionality, e.g., navigate to search results page
-    console.log("Searching for:", searchQuery);
-    navigate(`/search?query=${searchQuery}`); // Assuming you have a search route
+  
+    // Send custom event to notify other components of the search query
+    const event = new CustomEvent("courseSearch", {
+      detail: searchQuery,
+    });
+    window.dispatchEvent(event);
   };
 
   return (

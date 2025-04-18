@@ -10,7 +10,7 @@ const Sidebar_D = () => {
     { label: "Course List", to: "/course-list" },
     { label: "Add Course", to: "/add-course" },
     { label: "User Management", to: "/user-management" },
-    { label: "Settings",}
+    
   ];
 
   return (
@@ -26,8 +26,7 @@ const Sidebar_D = () => {
         />
       </div>
 
-      <button className="bg-blue-500 text-white px-4 py-1 rounded">Edit Profile</button>
-
+      
       {/* Nav Links */}
       <nav className="w-full mt-6 flex flex-col gap-2">
         {links.map(({ label, to }) => (

@@ -5,7 +5,9 @@ import Footer from "../Footer/Footer";
 
 const AIML = () => {
   const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]); // State for filtered courses
 
+  // Fetch courses when the component mounts
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -13,6 +15,7 @@ const AIML = () => {
         const data = await res.json();
         const aimlCourses = data.filter((course) => course.category === "AIML");
         setCourses(aimlCourses);
+        setFilteredCourses(aimlCourses); // Initially, show all AIML courses
       } catch (error) {
         console.error("Error fetching courses:", error);
       }
@@ -20,6 +23,25 @@ const AIML = () => {
 
     fetchCourses();
   }, []);
+
+  // Handle search functionality, fired from Navbar
+  useEffect(() => {
+    const handleSearch = (e) => {
+      const searchTerm = e.detail.toLowerCase();
+      const filtered = courses.filter(
+        (course) =>
+          course.title.toLowerCase().includes(searchTerm) ||
+          course.instructor.toLowerCase().includes(searchTerm)
+      );
+      setFilteredCourses(filtered);
+    };
+
+    window.addEventListener("courseSearch", handleSearch);
+
+    return () => {
+      window.removeEventListener("courseSearch", handleSearch);
+    };
+  }, [courses]);
 
   // Learner Images (You can keep this static for now)
   const learners = [
@@ -69,34 +91,36 @@ const AIML = () => {
 
       {/* Course Cards Section */}
       <div className="flex justify-center flex-wrap gap-7 px-10">
-        {courses.map((course, index) => (
-          <div
-            key={index}
-            className="w-60 p-4 bg-white shadow-lg rounded-lg text-center"
-          >
-            <img
-             src={`http://localhost:5000${course.image}`}
-              alt={course.title}
-              className="w-full h-32 rounded-lg object-cover"
-            />
-            <h4 className="mt-2 font-semibold">{course.title}</h4>
-            <p className="text-sm text-gray-600">{course.instructor}</p>
-
-            <Link
-              to="/AIML-course"
-              className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg inline-block"
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map((course, index) => (
+            <div
+              key={index}
+              className="w-60 p-4 bg-white shadow-lg rounded-lg text-center"
             >
-              Free Learning
-            </Link>
-          </div>
-        ))}
+              <img
+                src={`http://localhost:5000${course.image}`}
+                alt={course.title}
+                className="w-full h-32 rounded-lg object-cover"
+              />
+              <h4 className="mt-2 font-semibold">{course.title}</h4>
+              <p className="text-sm text-gray-600">{course.instructor}</p>
+
+              <Link
+                to="/AIML-course"
+                className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg inline-block"
+              >
+                Free Learning
+              </Link>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-600">No courses found.</p>
+        )}
       </div>
 
       {/* Learners Section */}
       <div className="bg-[#fdfce8] py-8 text-center mt-10">
-        <h3 className="text-lg font-semibold text-black">
-          Some of our Learners
-        </h3>
+        <h3 className="text-lg font-semibold text-black">Some of our Learners</h3>
         <div className="flex justify-center mt-4 space-x-6">
           {learners.map((learner, index) => (
             <img

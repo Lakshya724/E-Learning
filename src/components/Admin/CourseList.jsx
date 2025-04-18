@@ -8,7 +8,15 @@ const CourseList = () => {
   const [editForm, setEditForm] = useState({
     title: "",
     category: "",
-    instructor: ""
+    instructor: "",
+    image: null,
+    previewImage: null,
+  });
+  const [successMsg, setSuccessMsg] = useState("");
+  const [searchTerm, setSearchTerm] = useState({
+    title: "",
+    instructor: "",
+    category: "",
   });
 
   useEffect(() => {
@@ -24,12 +32,32 @@ const CourseList = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchFilteredCourses = async () => {
+      try {
+        const queryParams = new URLSearchParams();
+        if (searchTerm.title) queryParams.append("title", searchTerm.title);
+        if (searchTerm.instructor) queryParams.append("instructor", searchTerm.instructor);
+        if (searchTerm.category) queryParams.append("category", searchTerm.category);
+
+        const res = await axios.get(`http://localhost:5000/courses?${queryParams.toString()}`);
+        setCourses(res.data);
+      } catch (err) {
+        console.error("Error fetching filtered courses:", err);
+      }
+    };
+
+    fetchFilteredCourses();
+  }, [searchTerm]);
+
   const handleEditClick = (course) => {
     setEditingCourse(course);
     setEditForm({
       title: course.title,
       category: course.category,
-      instructor: course.instructor
+      instructor: course.instructor,
+      image: null,
+      previewImage: null,
     });
   };
 
@@ -40,9 +68,24 @@ const CourseList = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/courses/${editingCourse.id}`, editForm);
+      const formData = new FormData();
+      formData.append("title", editForm.title);
+      formData.append("category", editForm.category);
+      formData.append("instructor", editForm.instructor);
+      if (editForm.image) {
+        formData.append("image", editForm.image);
+      }
+
+      await axios.put(
+        `http://localhost:5000/courses/${editingCourse.id}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
       setEditingCourse(null);
-      fetchCourses(); // Refresh list
+      fetchCourses();
+      setSuccessMsg("Course updated!");
+      setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
       console.error("Error updating course:", err);
     }
@@ -52,7 +95,7 @@ const CourseList = () => {
     if (window.confirm("Are you sure you want to delete this course?")) {
       try {
         await axios.delete(`http://localhost:5000/courses/${id}`);
-        setCourses(courses.filter(course => course.id !== id));
+        setCourses(courses.filter((course) => course.id !== id));
       } catch (err) {
         console.error("Error deleting course:", err);
       }
@@ -61,14 +104,43 @@ const CourseList = () => {
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
       <div className="w-1/5 bg-gray-100">
         <Sidebar_D />
       </div>
 
-      {/* Content */}
       <div className="w-4/5 p-6 overflow-auto">
         <h1 className="text-4xl font-bold text-center mb-6">Course List</h1>
+
+        {successMsg && (
+          <div className="mb-4 text-green-700 bg-green-100 border border-green-400 px-4 py-2 rounded text-center">
+            {successMsg}
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <input
+            type="text"
+            placeholder="Search by title"
+            className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
+            value={searchTerm.title}
+            onChange={(e) => setSearchTerm({ ...searchTerm, title: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Search by instructor"
+            className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
+            value={searchTerm.instructor}
+            onChange={(e) => setSearchTerm({ ...searchTerm, instructor: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Search by category"
+            className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
+            value={searchTerm.category}
+            onChange={(e) => setSearchTerm({ ...searchTerm, category: e.target.value })}
+          />
+        </div>
+
         <table className="min-w-full border border-black text-center">
           <thead className="bg-gradient-to-r from-blue-100 to-blue-300">
             <tr>
@@ -115,51 +187,115 @@ const CourseList = () => {
           </tbody>
         </table>
 
-        {/* Edit Form (Inline below table) */}
+        {/* Edit Modal */}
         {editingCourse && (
-          <div className="mt-8 p-4 border rounded shadow-lg bg-white w-full max-w-md mx-auto">
-            <h2 className="text-xl font-semibold mb-4">Edit Course</h2>
-            <form onSubmit={handleEditSubmit} className="space-y-4">
-              <input
-                type="text"
-                name="title"
-                value={editForm.title}
-                onChange={handleEditChange}
-                placeholder="Course Title"
-                className="w-full border p-2 rounded"
-              />
-              <input
-                type="text"
-                name="category"
-                value={editForm.category}
-                onChange={handleEditChange}
-                placeholder="Category"
-                className="w-full border p-2 rounded"
-              />
-              <input
-                type="text"
-                name="instructor"
-                value={editForm.instructor}
-                onChange={handleEditChange}
-                placeholder="Instructor"
-                className="w-full border p-2 rounded"
-              />
-              <div className="flex justify-end gap-2">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-800">Edit Course Details</h2>
                 <button
-                  type="submit"
-                  className="bg-blue-600 text-white px-4 py-1 rounded"
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
                   onClick={() => setEditingCourse(null)}
-                  className="bg-gray-400 text-white px-4 py-1 rounded"
+                  className="text-gray-500 hover:text-gray-700 focus:outline-none transition-colors"
                 >
-                  Cancel
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </button>
               </div>
-            </form>
+
+              <form onSubmit={handleEditSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="flex flex-col items-center space-y-4">
+                    <div className="relative w-40 h-40 rounded-lg overflow-hidden border-2 border-gray-200 shadow-sm">
+                      <img
+                        src={
+                          editForm.previewImage ||
+                          `http://localhost:5000${editingCourse.image}`
+                        }
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        setEditForm((prev) => ({
+                          ...prev,
+                          image: file,
+                          previewImage: URL.createObjectURL(file),
+                        }));
+                      }}
+                      className="text-sm"
+                    />
+                  </div>
+
+                  <div className="space-y-5">
+                    <div>
+                      <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1.5">
+                        Course Title
+                      </label>
+                      <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        value={editForm.title}
+                        onChange={handleEditChange}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg"
+                        placeholder="Enter course title"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1.5">
+                        Category
+                      </label>
+                      <input
+                        type="text"
+                        id="category"
+                        name="category"
+                        value={editForm.category}
+                        onChange={handleEditChange}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg"
+                        placeholder="Enter category"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="instructor" className="block text-sm font-medium text-gray-700 mb-1.5">
+                        Instructor
+                      </label>
+                      <input
+                        type="text"
+                        id="instructor"
+                        name="instructor"
+                        value={editForm.instructor}
+                        onChange={handleEditChange}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg"
+                        placeholder="Enter instructor name"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={() => setEditingCourse(null)}
+                    className="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
       </div>

@@ -23,7 +23,7 @@ import CourseDetails from "../components/Courses/CourseDetails";
 import MobileDevelopmentCourse from "../components/Courses/MobiledevelopmentCourse";
 import AIMLCourse from "../components/Courses/AIMLCourse";
 import DataScienceCourse from "../components/Courses/DataScienceCourse";
-
+// import CourseDetail from "../components/Courses/CourseDetail";
 
 
 const AppRoutes = () => {
@@ -53,7 +53,7 @@ const AppRoutes = () => {
       <Route path="/mobile-course-details" element={<MobileDevelopmentCourse />} />
       <Route path="/AIML-course" element={<AIMLCourse />} />
       <Route path="/DataScience-details" element={<DataScienceCourse />} />
-  
+      {/* <Route path="/course/:id" element={<CourseDetail />} /> */}
 
     </Routes>
   );

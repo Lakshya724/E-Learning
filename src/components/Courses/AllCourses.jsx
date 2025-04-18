@@ -1,10 +1,13 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // ✅ import Link for routing
+import { Link } from "react-router-dom"; // ✅ Import Link for routing
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 
 const AllCourses = () => {
   const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]); // State for filtered courses
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -12,6 +15,7 @@ const AllCourses = () => {
         const res = await fetch("http://localhost:5000/courses");
         const data = await res.json();
         setCourses(data);
+        setFilteredCourses(data); // Initially, show all courses
       } catch (error) {
         console.error("Failed to fetch courses:", error);
       }
@@ -19,6 +23,29 @@ const AllCourses = () => {
 
     fetchCourses();
   }, []);
+
+  // Handle search functionality from Navbar
+  useEffect(() => {
+    const handleSearch = (e) => {
+      const searchTerm = e.detail.toLowerCase();
+      setSearchTerm(searchTerm);
+
+      // Filter courses based on title or instructor name
+      const filtered = courses.filter(
+        (course) =>
+          course.title.toLowerCase().includes(searchTerm) ||
+          course.instructor.toLowerCase().includes(searchTerm) ||
+          course.category.toLowerCase().includes(searchTerm)
+      );
+      setFilteredCourses(filtered);
+    };
+
+    window.addEventListener("courseSearch", handleSearch);
+
+    return () => {
+      window.removeEventListener("courseSearch", handleSearch);
+    };
+  }, [courses]);
 
   const learners = [
     { image: "src/assets/L_img1.webp" },
@@ -68,10 +95,10 @@ const AllCourses = () => {
 
       {/* Course Cards Section */}
       <div className="flex justify-center flex-wrap gap-7 px-10">
-        {courses.length > 0 ? (
-          courses.map((course) => (
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map((course) => (
             <Link
-              to={`/course/${course.id}`} // ✅ Navigate to course details page
+              to={`/course/${course.id}`} 
               key={course.id}
               className="w-60"
             >

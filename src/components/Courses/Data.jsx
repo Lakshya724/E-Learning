@@ -5,7 +5,9 @@ import Footer from "../Footer/Footer";
 
 const Data = () => {
   const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]); // State for filtered courses
 
+  // Fetch courses when the component mounts
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -13,6 +15,7 @@ const Data = () => {
         const data = await res.json();
         const filtered = data.filter(course => course.category === "DataScience");
         setCourses(filtered);
+        setFilteredCourses(filtered); // Initially, show all DataScience courses
       } catch (err) {
         console.error("Error fetching courses:", err);
       }
@@ -20,6 +23,25 @@ const Data = () => {
 
     fetchCourses();
   }, []);
+
+  // Handle search functionality, fired from Navbar
+  useEffect(() => {
+    const handleSearch = (e) => {
+      const searchTerm = e.detail.toLowerCase();
+      const filtered = courses.filter(
+        (course) =>
+          course.title.toLowerCase().includes(searchTerm) ||
+          course.instructor.toLowerCase().includes(searchTerm)
+      );
+      setFilteredCourses(filtered);
+    };
+
+    window.addEventListener("courseSearch", handleSearch);
+
+    return () => {
+      window.removeEventListener("courseSearch", handleSearch);
+    };
+  }, [courses]);
 
   const learners = [
     { image: "src/assets/L_img1.webp" },
@@ -68,8 +90,8 @@ const Data = () => {
 
       {/* Course Cards Section */}
       <div className="flex justify-center flex-wrap gap-7 px-10">
-        {courses.length > 0 ? (
-          courses.map((course, index) => (
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map((course, index) => (
             <div
               key={index}
               className="w-60 p-4 bg-white shadow-lg rounded-lg text-center"
@@ -96,9 +118,7 @@ const Data = () => {
 
       {/* Learners Section */}
       <div className="bg-[#fdfce8] py-8 text-center mt-10">
-        <h3 className="text-lg font-semibold text-black">
-          Some of our Learners
-        </h3>
+        <h3 className="text-lg font-semibold text-black">Some of our Learners</h3>
         <div className="flex justify-center mt-4 space-x-6">
           {learners.map((learner, index) => (
             <img

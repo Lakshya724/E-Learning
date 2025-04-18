@@ -6,15 +6,40 @@ import axios from "axios";
 
 const WebDev = () => {
   const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
 
   useEffect(() => {
     const category = "Web";
 
     axios
       .get(`http://localhost:5000/courses?category=${category}`)
-      .then((res) => setCourses(res.data))
+      .then((res) => {
+        setCourses(res.data);
+        setFilteredCourses(res.data);
+      })
       .catch((err) => console.error("❌ Failed to load courses:", err));
   }, []);
+
+  // Listen to search input from Navbar
+  useEffect(() => {
+    const handleCourseSearch = (e) => {
+      const query = e.detail.toLowerCase();
+
+      const results = courses.filter(
+        (course) =>
+          course.title.toLowerCase().includes(query) ||
+          course.instructor.toLowerCase().includes(query)
+      );
+
+      setFilteredCourses(results);
+    };
+
+    window.addEventListener("courseSearch", handleCourseSearch);
+
+    return () => {
+      window.removeEventListener("courseSearch", handleCourseSearch);
+    };
+  }, [courses]);
 
   return (
     <div className="bg-gray-100">
@@ -47,8 +72,8 @@ const WebDev = () => {
 
       {/* Course Cards */}
       <div className="flex justify-center flex-wrap gap-7 px-10">
-        {courses.length > 0 ? (
-          courses.map((course, index) => (
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map((course, index) => (
             <div key={index} className="w-60 p-4 bg-white shadow-lg rounded-lg text-center">
               <img
                 src={`http://localhost:5000${course.image}`}
@@ -66,7 +91,7 @@ const WebDev = () => {
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-600">No courses found for Web Development.</p>
+          <p className="text-center text-gray-600">No matching courses found.</p>
         )}
       </div>
 

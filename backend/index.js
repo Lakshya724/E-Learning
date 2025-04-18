@@ -196,35 +196,82 @@ app.post("/add-course", upload.single("image"), async (req, res) => {
 
 // Get all courses or filter by category
 app.get("/courses", async (req, res) => {
-  const { category } = req.query; // Getting category from query parameter
-
   try {
-    const query = category
-      ? "SELECT * FROM courses WHERE category = $1"
-      : "SELECT * FROM courses"; // If no category is provided, fetch all courses
-    const result = await pool.query(query, category ? [category] : []);
+    const { title, instructor, category } = req.query;
 
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error("❌ Error fetching courses:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-app.put("/courses/:id", async (req, res) => {
-  const { id } = req.params;
-  const { title, category, instructor } = req.body;
+    let query = "SELECT * FROM courses WHERE 1=1";
+    const values = [];
 
-  try {
-    const result = await pool.query(
-      "UPDATE courses SET title = $1, category = $2, instructor = $3 WHERE id = $4 RETURNING *",
-      [title, category, instructor, id]
-    );
-    res.json(result.rows[0]);
+    if (title) {
+      query += " AND LOWER(title) LIKE LOWER($" + (values.length + 1) + ")";
+      values.push(`%${title}%`);
+    }
+
+    if (instructor) {
+      query += " AND LOWER(instructor) LIKE LOWER($" + (values.length + 1) + ")";
+      values.push(`%${instructor}%`);
+    }
+
+    if (category) {
+      query += " AND LOWER(category) LIKE LOWER($" + (values.length + 1) + ")";
+      values.push(`%${category}%`);
+    }
+
+    const result = await pool.query(query, values);
+    res.json(result.rows);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
   }
 });
+
+// Update course with optional image upload
+app.put("/courses/:id", upload.single("image"), async (req, res) => {
+  const { id } = req.params;
+  const { title, category, instructor } = req.body;
+  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
+  try {
+    // Get current course info
+    const current = await pool.query("SELECT * FROM courses WHERE id = $1", [id]);
+
+    if (current.rows.length === 0) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    const existingImage = current.rows[0].image;
+    const finalImage = imagePath || existingImage;
+
+    const result = await pool.query(
+      "UPDATE courses SET title = $1, category = $2, instructor = $3, image = $4 WHERE id = $5 RETURNING *",
+      [title, category, instructor, finalImage, id]
+    );
+
+    res.status(200).json({ message: "Course updated", course: result.rows[0] });
+  } catch (err) {
+    console.error("Error updating course:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Get a single course by ID
+app.get("/course/:id", async (req, res) => {
+  const courseId = req.params.id;
+
+  try {
+    const result = await pool.query("SELECT * FROM courses WHERE id = $1", [courseId]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error("Error fetching course:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 
 // DELETE course by ID
 app.delete("/courses/:id", async (req, res) => {

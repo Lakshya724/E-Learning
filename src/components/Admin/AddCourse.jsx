@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ Import this
 import Sidebar_D from "../Admin/Sidebar_D";
 
 const AddCourse = () => {
@@ -10,6 +11,8 @@ const AddCourse = () => {
     image: null,
     otherCategory: "",
   });
+
+  const navigate = useNavigate(); // ✅ Initialize it
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,13 +29,10 @@ const AddCourse = () => {
     const formData = new FormData();
     formData.append("courseName", courseData.courseName);
     formData.append("profName", courseData.profName);
-    formData.append("category", courseData.category);
+    formData.append("category", courseData.category === "Others" ? courseData.otherCategory : courseData.category);
     formData.append("description", courseData.description);
-    if (courseData.category === "Others") {
-      formData.append("otherCategory", courseData.otherCategory || "");
-    }
     if (courseData.image) {
-      formData.append("image", courseData.image); // Ensuring the image is added to form data
+      formData.append("image", courseData.image);
     }
 
     try {
@@ -44,14 +44,7 @@ const AddCourse = () => {
       const data = await res.json();
       if (data.success) {
         alert("✅ Course added successfully!");
-        setCourseData({
-          courseName: "",
-          profName: "",
-          category: "",
-          description: "",
-          image: null,
-          otherCategory: "",
-        });
+        navigate("/course-list");
       } else {
         alert("❌ Failed to add course.");
       }
@@ -123,7 +116,7 @@ const AddCourse = () => {
                 name="otherCategory"
                 placeholder="Enter Custom Category"
                 className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                value={courseData.otherCategory || ""}
+                value={courseData.otherCategory}
                 onChange={(e) =>
                   setCourseData({ ...courseData, otherCategory: e.target.value })
                 }
