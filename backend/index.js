@@ -4,6 +4,8 @@ import cors from "cors";
 import pg from "pg";
 import multer from "multer";
 import path from "path";
+import nodemailer from 'nodemailer';
+
 
 const { Pool } = pg;
 const app = express();
@@ -285,6 +287,113 @@ app.delete("/courses/:id", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+
+// Contact form submission
+app.post('/api/contact', async (req, res) => {
+  const { name, email, subject, message } = req.body;
+
+  try {
+    // Save to database
+    await pool.query(
+      'INSERT INTO contact_messages (name, email, subject, message) VALUES ($1, $2, $3, $4)',
+      [name, email, subject, message]
+    );
+
+    // Send email
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'Lakshyakumar724@gmail.com',
+        pass: 'thpa epxs mqoa xlwv',
+      },
+    });
+
+    await transporter.sendMail({
+      from: '"Contact Form" <Lakshyakumar724@gmail.com>',
+      to: 'Lakshyakumar724@gmail.com',
+      subject: `New Contact Message: ${subject}`,
+      text: `From: ${name} <${email}>\n\n${message}`,
+    });
+
+    res.status(200).json({ success: true, message: 'Message sent successfully!' });
+  } catch (error) {
+    console.error('Error saving contact form:', error.message);
+    res.status(500).json({ success: false, message: 'Something went wrong.' });
+  }
+});
+
+const router = express.Router();
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Email not found' });
+    }
+
+    const token = crypto.randomBytes(20).toString('hex');
+    const expiry = new Date(Date.now() + 3600000); // 1 hour
+
+    await pool.query(
+      'UPDATE users SET reset_token = $1, token_expiry = $2 WHERE email = $3',
+      [token, expiry, email]
+    );
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'Lakshyakumar724@gmail.com',
+        pass: 'thpa epxs mqoa xlwv',
+      },
+    });
+
+    const resetLink = `http://localhost:5173/reset-password/${token}`;
+
+    await transporter.sendMail({
+      from: '"SkillElevate Support" <your-email@gmail.com>',
+      to: email,
+      subject: 'Password Reset',
+      html: `<p>You requested a password reset. Click <a href="${resetLink}">here</a> to reset your password.</p>`,
+    });
+
+    res.json({ message: 'Reset link sent to your email' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+router.post('/reset-password/:token', async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    const result = await pool.query(
+      'SELECT * FROM users WHERE reset_token = $1 AND token_expiry > NOW()',
+      [token]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(400).json({ message: 'Invalid or expired token' });
+    }
+
+    const user = result.rows[0];
+
+    // Update the password (without hashing)
+    await pool.query(
+      'UPDATE users SET password = $1, reset_token = NULL, token_expiry = NULL WHERE id = $2',
+      [newPassword, user.id]
+    );
+
+    res.json({ message: 'Password successfully reset!' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 
 
 // Start the server
